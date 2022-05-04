@@ -122,6 +122,7 @@ python src/tf-test.py
 Expected otuput
 ```
 [PhysicalDevice(name='/physical_device:CPU:0', device_type='CPU'), PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
+Matrix Multiply Elapsed Time: {'CPU': 3.397987127304077, 'GPU': 1.9073705673217773}
 ```
 
 Run the simple benchmark.
