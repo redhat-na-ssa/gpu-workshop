@@ -1,17 +1,30 @@
-# A workshop focused on using GPUs on Red Hat platforms (work in progress)
+# Red Hat GPU Workshop 
 
-## Table of Contents
+## Overview
+A workshop focused on using GPUs on Red Hat platforms. 
 
-1. [RHEL 8.5](#RHEL)
+### Table of Contents
+
+1. [Background](#background)
+1. [Installation](#installation) 
+- [RHEL 8.5](#RHEL)
     - [Driver Installation](#driver-installation)
     - [Testing](#rhel-testing)
-1. [Openshift 4.10](#Openshift)
+- [Openshift 4.10](#Openshift)
     - [Operator Installation](#operator-installation)
     - [Testing](#openshift-testing)
 
-### RHEL
+### Background
 
-#### Driver Installation
+Graphics Processing Units (GPUs) were originally invented to allow application developers to program 3D graphics accelerators to render photo realistic images in real time. The key is GPUs accelerate matrix and vector math operations (dot product, cross product and matrix multiplies). It turns out that these math operations are used in many applications besides 3D graphics including high performance computing and machine learning. As a result, software libraries were developed to allow non-graphics or general purpose computing applications to take advantage of GPU hardware.
+
+![non-Shaded Skull](./images/skull.jpg) ![Shaded Skull](./images/skullshaded.jpg)
+
+### Installation
+
+#### RHEL
+
+##### Driver Installation
 
 This workshop is based on using the precompiled
 nvidia drivers that match a specific Red Hat kernel release.
