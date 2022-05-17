@@ -296,11 +296,8 @@ Simple Pod
 
 ##### OpenDataHub
 
-Build the cuda stack
+Create an ODH instance in your namespace. For testing purposes, a minimal kfdef that includes `jupyterhub` can be deployed ODH.
 
-Notebook limits
-
-Create an ODH instance in your namespace
 
 - `$ oc new-project my-odh`
 - Navigate to:
@@ -328,11 +325,13 @@ Create an ODH instance in your namespace
             - Use default label (i.e. don't put anything in this field)
           - Create
 
-Several images will get pulled and eventually running pods should appear followed by container image builds.
+Several images will get pulled and eventually a number of Openshift builds should run to build the cuda enabled notebook images.
 The entire Open Data Hub deployment could take up to an hour depending on available resources. When the builds
 complete there should be 8 of them.
 
-For testing purposes, a minimal kfdef that includes `jupyterhub` can be deployed ODH.
+Create a configmap to set custom notebook limits.
+
+Example
 
 ### Demos
 
