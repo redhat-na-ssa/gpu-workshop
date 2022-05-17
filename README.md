@@ -173,13 +173,14 @@ pod "test-entitlement" deleted
 #### Operator Installation
 
 - Using the Openshift web console, install the **Red Hat Node Feature Discovery (NFD)** operator. Use the default values and it should create a namespace called `openshift-nfd`. 
-  - Then create an **NodeFeatureDiscovery (NFD)** instance in that same `openshift-nfd` namespace.
+- Next create an **NodeFeatureDiscovery (NFD)** instance in that same `openshift-nfd` namespace.
 
 This should launch a daemonset.
 
 ```
 oc get pods -n openshift-nfd
-
+```
+```
 NAME                                      READY   STATUS    RESTARTS   AGE
 nfd-controller-manager-56cc649f75-mj7bn   2/2     Running   0          5m52s
 nfd-master-4mzkt                          1/1     Running   0          100s
@@ -190,7 +191,7 @@ nfd-worker-r47qd                          1/1     Running   0          100s
 ```
 
 - Using the Openshift web console, install the **nvidia operator (v1.10.1)**. It should create a namespace called `nvidia-gpu-operator`. 
-  - Then create a **cluster policy (CP)** instance in the same `nvidia-gpu-operator` namespace.
+- Next create a **cluster policy (CP)** instance in the same `nvidia-gpu-operator` namespace.
 
 Wait for all the pods to have a running status. This could take several minutes.
 
