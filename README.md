@@ -132,13 +132,11 @@ Run the script to test the tensorflow devices.
 python src/tf-test.py
 ```
 
-Expected otuput
+Compare the CPU vs. GPU elapsed time in the output.
 ```
 [PhysicalDevice(name='/physical_device:CPU:0', device_type='CPU'), PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
 Matrix Multiply Elapsed Time: {'CPU': 3.397987127304077, 'GPU': 1.9073705673217773}
 ```
-
-Run the simple benchmark.
 
 ##### Nvidia Container Toolkit
 
@@ -148,6 +146,8 @@ Configure the toolkit for rootless operation.
 
 ##### Containerized app test
 
+The `nvidia-smi` output should be similar to what was reported above.
+
 ```
 podman run --rm --security-opt=label=disable --hooks-dir=/usr/share/containers/oci/hooks.d/ nvidia/cuda:11.0-base nvidia-smi
 ```
@@ -155,6 +155,10 @@ podman run --rm --security-opt=label=disable --hooks-dir=/usr/share/containers/o
 ### Openshift 
 
 #### Operator Installation
+
+Install the NFD operator.
+
+Install the nvidia operator.
 
 ##### Openshift Testing
 
