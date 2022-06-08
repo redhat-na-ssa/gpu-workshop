@@ -13,6 +13,7 @@ A workshop focused on using GPUs on Red Hat platforms.
 - [Openshift 4.10](#Openshift)
     - [Operator Installation](#operator-installation)
     - [Testing](#openshift-testing)
+    - [OpenDataHub](#opendatahub)
 
 ### Background
 
@@ -28,6 +29,8 @@ Graphics Processing Units (GPUs) were originally invented to allow application d
 
 This workshop is based on using the precompiled
 nvidia drivers that match a specific Red Hat kernel release.
+
+##### AWS
 
 If running on AWS EC2, the AWS RHUI repos shoud be disabled. 
 
@@ -47,7 +50,9 @@ Check that `enabled=0` in `/etc/yum/pluginconf.d/amazon-id.conf`.
 subscription-manager register --username=user@gmail.com
 ```
 
-Attach subs and enable repos.
+##### Subscribe RHEL systems
+
+Attach subs and enable the necessary repos.
 
 ```
 subscription-manager attach --auto
@@ -291,8 +296,6 @@ $
 Login to Jupyter and run the `classification.ipynb` notebook.
 
 ##### Create a new tensorflow/jupyter app from the [nvidia examples site](https://nvidia.github.io/gpu-operator/).
-
-Simple Pod
 
 ##### OpenDataHub
 
