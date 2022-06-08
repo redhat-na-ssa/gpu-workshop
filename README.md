@@ -329,9 +329,10 @@ Several images will get pulled and eventually a number of Openshift builds shoul
 The entire Open Data Hub deployment could take up to an hour depending on available resources. When the builds
 complete there should be 8 of them.
 
-Create a configmap to set custom notebook limits.
-
-Example
+Configmaps are used to set custom notebook limits. Apply the following configmap before the launching jupyterhub server.
+```
+oc apply -f src/jupyterhub-notebook-sizes.yml
+```
 
 ### Demos
 
