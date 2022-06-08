@@ -329,16 +329,20 @@ Several images will get pulled and eventually a number of Openshift builds shoul
 The entire Open Data Hub deployment could take up to an hour depending on available resources. When the builds
 complete there should be 8 of them.
 
+#### Custom Notebook Limits
+
 Configmaps are used to set custom notebook limits. Apply the following configmap before the launching jupyterhub server.
 ```
 oc apply -f src/jupyterhub-notebook-sizes.yml
 ```
 
-### Demos
+#### Demos
+
+From within Jupyter, clone the following repo:
 
 [Tensor Flow Examples](https://github.com/tensorflow/docs.git)
 
-The following tensorflow examples should work:
+These tensorflow notebook examples should run:
 
 - `docs/site/en/tutorials/keras/classification.ipynb`
 - `docs/site/en/tutorials/quickstart/beginner.ipynb`
