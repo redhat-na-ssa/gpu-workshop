@@ -334,7 +334,11 @@ complete there should be 8 of them.
 
 #### Custom Notebook Limits
 
-Configmaps are used to set custom notebook limits. Apply the following configmap before the launching jupyterhub server.
+Configmaps are used to set custom notebook resource limits such as number of cpu cores,
+memory and GPUs. This is necessary for the jupyter pod to get scheduled
+on a GPU node. 
+
+Apply the following configmap before the launching jupyterhub server.
 ```
 oc apply -f src/jupyterhub-notebook-sizes.yml
 ```
