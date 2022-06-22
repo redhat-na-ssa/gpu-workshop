@@ -5,8 +5,15 @@ A workshop focused on using GPUs on Red Hat platforms.
 
 ### Table of Contents
 
+1. Abstract
 1. [Background](#background)
-1. [Installation](#installation) 
+1. Audience
+1. Prerequisites
+1. Labs
+1. [Installation](#installation)
+1. Appendix
+1. References
+
 - [RHEL 8.5](#RHEL)
     - [Driver Installation](#driver-installation)
     - [Testing](#rhel-testing)
