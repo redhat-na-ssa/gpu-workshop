@@ -24,7 +24,7 @@ A workshop focused on using GPUs on Red Hat platforms.
 
 ### Background
 
-Graphics Processing Units (GPUs) were originally invented to allow application developers to program 3D graphics accelerators to render photo realistic images in real time. The key is GPUs accelerate matrix and vector math operations (dot product, cross product and matrix multiplies). It turns out that these math operations are used in many applications besides 3D graphics including high performance computing and machine learning. As a result, software libraries were developed to allow non-graphics or general purpose computing applications to take advantage of GPU hardware.
+Graphics Processing Units (GPUs) were originally invented to allow application developers to program 3D graphics accelerators to render photo realistic images in real time. The key is GPUs accelerate matrix and vector math operations (dot product, cross product and matrix multiplies). It turns out that these math operations are used in many applications besides 3D graphics including high performance computing and machine learning. As a result, software libraries (i.e. CUDA) were developed to allow non-graphics or general purpose computing applications to take advantage of GPU hardware.
 
 ![non-Shaded Skull](./images/skull.jpg) ![Shaded Skull](./images/skullshaded.jpg)
 
@@ -147,7 +147,7 @@ python src/tf-test.py
 Compare the CPU vs. GPU elapsed time in the output.
 ```
 [PhysicalDevice(name='/physical_device:CPU:0', device_type='CPU'), PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
-Matrix Multiply Elapsed Time: {'CPU': 3.397987127304077, 'GPU': 1.9073705673217773}
+Matrix Multiply Elapsed Time: {'CPU': 6.495161056518555, 'GPU': 0.9890825748443604}
 ```
 
 ##### Nvidia Container Toolkit
@@ -328,7 +328,7 @@ Create an ODH instance in your namespace. For testing purposes, a minimal kfdef 
                 path: jupyterhub/notebook-images
               name: notebook-images
             ```
-          - Near the bottom change the tarball version to `v.1.0.9`
+          - Near the bottom change the tarball versions to `v1.4.0-openshift` and `v.1.2.2`.
           - Name
             - opendatahub
           - Labels 
