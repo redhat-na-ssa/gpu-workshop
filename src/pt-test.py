@@ -22,6 +22,7 @@ def run_sum(size: int) -> None:
 
     print('GPU time = ',elapsed_time)
 
-for size in 64, 128, 256, 512, 1024, 2048, 4096:
+for size in 128, 256, 512, 1024, 2048, 4096:
+
     print(f'size = {size} x {size}')
     run_sum(size)
