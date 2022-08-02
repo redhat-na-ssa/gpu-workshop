@@ -8,9 +8,9 @@ def run_sum(size: int) -> None:
     for _ in range(1000):
         a += a
     torch.cuda.synchronize()
-    elapsed_time = time.time() - start_time
+    cpu_elapsed_time = time.time() - start_time
 
-    print('CPU time = ',elapsed_time)
+    print(f'CPU time = {cpu_elapsed_time: .3f}')
 
     ###GPU
     start_time = time.time()
@@ -18,11 +18,11 @@ def run_sum(size: int) -> None:
     for _ in range(1000):
         b += b
     torch.cuda.synchronize()
-    elapsed_time = time.time() - start_time
+    gpu_elapsed_time = time.time() - start_time
 
-    print('GPU time = ',elapsed_time)
-
-for size in 128, 256, 512, 1024, 2048, 4096:
-
+    print(f'GPU time = {gpu_elapsed_time: .3f}')
+    print(f'Speedup = {cpu_elapsed_time/gpu_elapsed_time: .3f}')
+    
+for size in 128, 256, 512, 1024, 2048, 4096, 8192:
     print(f'size = {size} x {size}')
     run_sum(size)
