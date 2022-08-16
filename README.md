@@ -353,6 +353,10 @@ oc get builds
 
 ```
 
+#### GPU Dashboard (Openshift v4.11+)
+
+Install the GPU console plugin dashboard by following the [github documentation](https://github.com/rh-ecosystem-edge/console-plugin-nvidia-gpu).
+
 #### Custom Notebook Limits
 
 Configmaps are used to set custom notebook resource limits such as number of cpu cores,
