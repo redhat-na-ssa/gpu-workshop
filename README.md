@@ -337,20 +337,19 @@ Create an ODH instance in your namespace. For testing purposes, a minimal kfdef 
 Wait for the jupyterhub and jupyterhub-db pods to become ready.
 
 Building the CUDA enabled notebook images.
+```
+oc apply -f https://github.com/red-hat-data-services/odh-deployer/blob/main/nbc/cuda-11.4.2/manifests.yaml
+```
 
-Add `- cuda-11.0.3` to the opendatahub kfdef notebook-images section.
-```
-oc edit kfdef opendatahub
-```
-Several images will get pulled and eventually a number of Openshift builds should run to build the cuda enabled notebook images.
-The entire Open Data Hub deployment could take up to an hour depending on available resources. When the builds
+An Openshift build chain should run to build the cuda enabled notebook images.
+The entire process could take up to an hour depending on available resources. When the builds
 complete there should be 8 of them.
 
 ```
 oc get builds
 ```
 ```
-
+List of builds go here ...
 ```
 
 #### GPU Dashboard (Openshift v4.11+)
