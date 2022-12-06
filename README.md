@@ -306,50 +306,15 @@ Login to Jupyter and run the `classification.ipynb` notebook.
 
 ##### OpenDataHub
 
-Create an ODH instance in your namespace. For testing purposes, a minimal kfdef that includes `jupyterhub` can be deployed ODH.
+Create a new project for OpenDataHub.
 
+Using the Openshift web console, create an instance of the ODH operator in this project.
 
-- `$ oc new-project my-odh`
-- Navigate to:
-  - Operators
-    - Installed Operators
-      - *Important* In the upper left => Set Project: my-odh
-      - Open Data Hub Operator
-        - Create Instance
-          - Configure via: YAML view
-            - Add a `- cuda-11.0.3` element to the overlays array in the `notebook-image` section just above the `- addtional` element.
-            ```
-            - kustomizeConfig:
-              overlays:
-                - additional
-              repoRef:
-                name: manifests
-                path: jupyterhub/notebook-images
-              name: notebook-images
-            ```
-          - Near the bottom change the tarball versions to `v1.4.0-openshift` and `v.1.2.0`.
-          - Name
-            - opendatahub
-          - Labels 
-            - Use default label (i.e. don't put anything in this field)
-          - Create
+Create an ODH instance in your namespace.
 
-Wait for the jupyterhub and jupyterhub-db pods to become ready.
-
-Building the CUDA enabled notebook images.
+Create the CUDA enabled notebook image streams.
 ```
-oc apply -f https://github.com/red-hat-data-services/odh-deployer/blob/main/nbc/cuda-11.4.2/manifests.yaml
-```
-
-An Openshift build chain should run to build the cuda enabled notebook images.
-The entire process could take up to an hour depending on available resources. When the builds
-complete there should be 8 of them.
-
-```
-oc get builds
-```
-```
-List of builds go here ...
+oc apply -f https://raw.githubusercontent.com/red-hat-data-services/odh-manifests/master/jupyterhub/notebook-images/overlays/additional/tensorflow-notebook-imagestream.yaml 
 ```
 
 #### GPU Dashboard (Openshift v4.11+)
