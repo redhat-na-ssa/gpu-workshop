@@ -1,7 +1,7 @@
 # Red Hat GPU Workshop 
 
 ## Overview
-A workshop focused on using GPUs on Red Hat platforms. 
+A workshop focused on using NVIDIA GPUs on Red Hat platforms. 
 
 ### Table of Contents
 
@@ -24,7 +24,11 @@ A workshop focused on using GPUs on Red Hat platforms.
 
 ### Background
 
-Graphics Processing Units (GPUs) were originally invented to allow application developers to program 3D graphics accelerators to render photo realistic images in real time. The key is GPUs accelerate matrix and vector math operations (dot product, cross product and matrix multiplies). It turns out that these math operations are used in many applications besides 3D graphics including high performance computing and machine learning. As a result, software libraries (i.e. CUDA) were developed to allow non-graphics or general purpose computing applications to take advantage of GPU hardware.
+Graphics Processing Units (GPUs) were originally invented to allow application developers to program 3D graphics accelerators 
+to render photo realistic images in real time. The key is GPUs accelerate matrix and vector math 
+operations (dot product, cross product and matrix multiplies). It turns out these math operations are used in many applications 
+besides 3D graphics including high performance computing and machine learning. As a result, software libraries (i.e. CUDA) 
+were developed to allow non-graphics or general purpose computing applications to take advantage of GPU hardware.
 
 ![non-Shaded Skull](./images/skull.jpg) ![Shaded Skull](./images/skullshaded.jpg)
 
@@ -41,8 +45,6 @@ nvidia drivers that match a specific Red Hat kernel release.
 
 If running on AWS EC2, the AWS RHUI repos shoud be disabled. 
 
-Need to check whether the drivers will install against RHUI.
-
 ```
 systemctl disable choose_repo
 yum-config-manager --disable rhel-8-appstream-rhui-rpms 
@@ -57,37 +59,20 @@ Check that `enabled=0` in `/etc/yum/pluginconf.d/amazon-id.conf`.
 subscription-manager register --username=user@gmail.com
 ```
 
-##### Subscribe RHEL systems
+The system should have an active RHEL subcription.
 
-Attach subs and enable the necessary repos.
-
-```
-subscription-manager attach --auto
-subscription-manager repos --enable=rhel-8-for-x86_64-baseos-rpms
-subscription-manager repos --enable=rhel-8-for-x86_64-appstream-rpms
-yum repolist
-```
-
-Check out this [blog post to install thwe drivers](https://linuxhint.com/install-nvidia-drivers-rhel-9/#B)
+Check out this [blog post to install the nvidia drivers](https://linuxhint.com/install-nvidia-drivers-rhel-9/#B)
 
 [TensorFlow's installation instructions](https://www.tensorflow.org/install/pip#software_requirements)
 list the GPU dependencies (current as of December 13 2022):
 
+The following NVIDIA® software are required for GPU support.
 ```
-The following NVIDIA® software are only required for GPU support.
 
 NVIDIA® GPU drivers version 450.80.02 or higher.
 CUDA® Toolkit 11.2.
 cuDNN SDK 8.1.0.
 (Optional) TensorRT to improve latency and throughput for inference.
-```
-
-Follow the docs to [install the nvidia drivers](https://developer.nvidia.com/blog/streamlining-nvidia-driver-deployment-on-rhel-8-with-modularity-streams/)
-
-This should subscribe to the `cuda-rhel8-x86_64` repo.
-
-```
-dnf module install nvidia-driver:latest
 ```
 
 Running nvidia-smi will cause the kernel modules to load.
@@ -121,8 +106,8 @@ The expected output should resemble the following.
 Confirm the kernel modules are loaded.
 ```
 lsmod|grep nvidia
-
-
+```
+```
 nvidia_drm             61440  0
 nvidia_modeset       1118208  1 nvidia_drm
 nvidia_uvm           1085440  0
@@ -131,7 +116,7 @@ drm_kms_helper        253952  1 nvidia_drm
 drm                   573440  4 drm_kms_helper,nvidia,nvidia_drm
 ```
 
-Install cuda and cudnn packages.
+Install the cuda and cudnn packages.
 
 ```
 yum install cuda libcudnn8 -y
@@ -143,7 +128,7 @@ yum install cuda libcudnn8 -y
 
 Now the system should be ready to run a gpu workload.
 
-A simple test using Tensorflow.
+Run a simple test to validate the software stack.
 
 Create a python environment and install tensorflow.
 
@@ -151,6 +136,24 @@ Create a python environment and install tensorflow.
 python3 -m venv venv
 source venv/bin/activate
 pip install pip tensorflow -U
+```
+
+Run a simple tensorflow test to confirm a GPU device is found.
+```
+ipython
+
+import tensorflow as tf
+
+tf.config.list_logical_devices()
+```
+
+Sample output.
+```
+Created device /job:localhost/replica:0/task:0/device:GPU:0 with 14644 MB 
+memory:  -> device: 0, name: Tesla T4, pci bus id: 0001:00:00.0, compute capability: 7.5
+
+[LogicalDevice(name='/device:CPU:0', device_type='CPU'),
+ LogicalDevice(name='/device:GPU:0', device_type='GPU')]
 ```
 
 Run the script to test the tensorflow devices.
