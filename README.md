@@ -14,7 +14,7 @@ A workshop focused on using GPUs on Red Hat platforms.
 1. Appendix
 1. References
 
-- [RHEL 8.5](#RHEL)
+- [RHEL 9.1](#RHEL)
     - [Driver Installation](#driver-installation)
     - [Testing](#rhel-testing)
 - [Openshift 4.10](#Openshift)
@@ -68,6 +68,8 @@ subscription-manager repos --enable=rhel-8-for-x86_64-appstream-rpms
 yum repolist
 ```
 
+Check out this [blog post to install thwe drivers](https://linuxhint.com/install-nvidia-drivers-rhel-9/#B)
+[
 Follow the docs to [install the nvidia drivers](https://developer.nvidia.com/blog/streamlining-nvidia-driver-deployment-on-rhel-8-with-modularity-streams/)
 
 This should subscribe to the `cuda-rhel8-x86_64` repo.
