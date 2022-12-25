@@ -69,7 +69,19 @@ yum repolist
 ```
 
 Check out this [blog post to install thwe drivers](https://linuxhint.com/install-nvidia-drivers-rhel-9/#B)
-[
+
+[TensorFlow's installation instructions](https://www.tensorflow.org/install/pip#software_requirements)
+list the GPU dependencies (current as of December 13 2022):
+
+```
+The following NVIDIA® software are only required for GPU support.
+
+NVIDIA® GPU drivers version 450.80.02 or higher.
+CUDA® Toolkit 11.2.
+cuDNN SDK 8.1.0.
+(Optional) TensorRT to improve latency and throughput for inference.
+```
+
 Follow the docs to [install the nvidia drivers](https://developer.nvidia.com/blog/streamlining-nvidia-driver-deployment-on-rhel-8-with-modularity-streams/)
 
 This should subscribe to the `cuda-rhel8-x86_64` repo.
