@@ -1,0 +1,42 @@
+= GPU Workshop Ansible
+
+:numbered:
+
+== Purpose
+
+== Pre-reqs:
+
+. *ansible*
++
+Ansible needs to be installed on the host machine. ie:
++
+-----
+$ dnf install ansible
+-----
+
+. *RHEL9 virtual machine*
+.. Operating system user
++
+Operating system user needs to be enabled with ability to sudo.
++
+In addition, ssh access via public/private keys needs to be enabled for this user.
+
+.. Subscription-Manager
++
+All VMs need to already have access to base RHEL 9 dnf/yum repositories.
+
+== Procedure
+
+. Copy `inventory.example` :
++
+-----
+$ cp inventory.example inventory
+-----
++
+Make changes to `inventory` file as needed.
+
+. Execute:
++
+-----
+$ ansible-playbook -i inventory vm_update.yml
+-----
