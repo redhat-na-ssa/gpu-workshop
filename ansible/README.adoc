@@ -7,11 +7,17 @@
 == Pre-reqs:
 
 . *ansible*
-+
-Ansible needs to be installed on the host machine. ie:
+
+.. Ansible needs to be installed on the host machine. ie:
 +
 -----
-$ dnf install ansible
+# dnf install ansible
+-----
+
+.. In addition, the link:https://docs.ansible.com/ansible/latest/collections/ansible/posix/firewalld_module.html[ansible-posix collection] is also needed. ie:
++
+-----
+# dnf install ansible-collection-ansible-posix.noarch
 -----
 
 . *RHEL9 virtual machine*
@@ -24,6 +30,10 @@ In addition, ssh access via public/private keys needs to be enabled for this use
 .. Subscription-Manager
 +
 All VMs need to already have access to base RHEL 9 dnf/yum repositories.
+
+.. Storage
++
+The NVidea drivers that are installed (as part of this ansible) require at least 20GB allocated to the `/` filesystem.
 
 == Procedure
 
