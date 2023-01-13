@@ -1,0 +1,22 @@
+---
+
+- name: "create operatorgroup in {{ nvidia_operator_namespace }}"
+  import_role:
+    name: ../roles/operatorgroup
+  vars:
+    operatorgroup_name: "{{ nvidia_operator_namespace }}"
+    operatorgroup_namespace: "{{ nvidia_operator_namespace }}"
+    operatorgroup_target_namespace: "{{ nvidia_operator_namespace }}"
+
+- name: "deploy nvidia operator in {{ nvidia_operator_namespace }}"
+  import_role:
+    name: ../roles/operator_olm
+  vars:
+    operator_name: "{{ nvidia_operator_packagemanifest }}"
+    packagemanifest: "{{ nvidia_operator_packagemanifest }}"
+    subscription_channel: "{{ nvidia_operator_subscription_channel }}"
+    subscription_namespace: "{{ nvidia_operator_namespace }}"
+    subscription_name: "{{ nvidia_operator_subscription_name }}"
+    automatic_installplan_approval: "{{ nvidia_operator_subscription_automatic_installplan_approval }}"
+    subscription_starting_csv: "{{ nvidia_operator_subscription_starting_csv  }}"
+    csv_prefix: "{{ nvidia_operator_csv_prefix }}"

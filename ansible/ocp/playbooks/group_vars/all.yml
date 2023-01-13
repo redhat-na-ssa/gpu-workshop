@@ -1,0 +1,26 @@
+---
+
+#############    General    #######################
+home_dir: "{{ playbook_dir }}/.."
+
+# resources dir
+resources_base_dir: "{{ home_dir }}/resources"
+
+# oc executable
+openshift_cli: oc
+
+# The OCP user that will own all resources in the generated OCP namespace
+project_admin: user1
+
+project_annotations:
+
+gpu_operator_namespace: gpu-operator-namespace
+
+#################################################
+
+
+####    Node Feature Discovery (NFD    ############
+
+namespace_nfd: changeme
+undeploy_nfd_operator: false
+#################################################

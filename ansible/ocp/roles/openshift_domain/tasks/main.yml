@@ -1,0 +1,11 @@
+---
+
+- name: get domain url
+  shell: echo $({{ openshift_cli }} get route console -o jsonpath='{.spec.host}' -n openshift-console | sed "s/console-openshift-console.//g")
+  register: ocp_domain_host
+  when: ACTION is not defined or ACTION == "install"
+
+- name: set ocp_domain fact
+  set_fact: 
+    ocp_domain: "{{ ocp_domain_host.stdout }}"
+  when: ACTION is not defined or ACTION == "install"

@@ -37,6 +37,8 @@
         - pkgconfig
         - firewalld
         - python3-firewall
+        - podman-docker
+        - skopeo
       state: present
     
   - ansible.builtin.yum_repository:

@@ -1,0 +1,20 @@
+---
+
+#- name: "delete keycloak custom resource"
+#  k8s:
+#    state: absent
+#    kind: Keycloak
+#    api_version: k8s.keycloak.org/v2alpha1
+#    name: rhsso
+#    namespace: "{{ namespace }}"
+
+- name: "delete NVidea GPU operator in {{ gpu_operator_namespace }}"
+  import_role:
+    name: ../roles/operator_olm
+    tasks_from: uninstall
+  vars:
+    operator_name: nvidia_gpu
+    subscription_namespace: "{{ gpu_operator_namespace }}"
+    subscription_name: "{{ nvidia_gpu_operator_subscription_name }}"
+    csv_prefix: "{{ nvidia_gpu_operator_csv_prefix }}"
+  when: undeploy_nvidia_gpu_operator is defined and undeploy_nvidia_gpu_operator == "true"

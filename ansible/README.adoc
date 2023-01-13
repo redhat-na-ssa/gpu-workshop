@@ -2,9 +2,11 @@
 
 :numbered:
 
-== Purpose
+== Provisioning: Virtual Machine
 
-== Pre-reqs:
+=== Purpose
+
+=== Pre-reqs:
 
 . *ansible*
 
@@ -35,7 +37,13 @@ All VMs need to already have access to base RHEL 9 dnf/yum repositories.
 +
 The NVidea drivers that are installed (as part of this ansible) require at least 20GB allocated to the `/` filesystem.
 
-== Procedure
+=== Procedure
+
+. Change directory into `vm`:
++
+-----
+$ cd vm
+-----
 
 . Copy `inventory.example` :
 +
@@ -49,4 +57,18 @@ Make changes to `inventory` file as needed.
 +
 -----
 $ ansible-playbook -i inventory vm_update.yml
+-----
+
+== Provisioning: OpenShift
+
+=== Purpose
+
+=== Pre-reqs:
+
+. *ansible*
+
+.. Ansible needs to be installed on the host machine. ie:
++
+-----
+# dnf install ansible
 -----

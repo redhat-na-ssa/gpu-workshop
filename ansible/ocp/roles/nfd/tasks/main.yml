@@ -1,0 +1,22 @@
+---
+
+- name: "create operatorgroup in {{ nfd_operator_namespace }}"
+  import_role:
+    name: ../roles/operatorgroup
+  vars:
+    operatorgroup_name: "{{ nfd_operator_namespace }}"
+    operatorgroup_namespace: "{{ nfd_operator_namespace }}"
+    operatorgroup_target_namespace: "{{ nfd_operator_namespace }}"
+
+- name: "deploy nfd operator in {{ nfd_operator_namespace }}"
+  import_role:
+    name: ../roles/operator_olm
+  vars:
+    operator_name: "{{ nfd_operator_packagemanifest }}"
+    packagemanifest: "{{ nfd_operator_packagemanifest }}"
+    subscription_channel: "{{ nfd_operator_subscription_channel }}"
+    subscription_namespace: "{{ nfd_operator_namespace }}"
+    subscription_name: "{{ nfd_operator_subscription_name }}"
+    automatic_installplan_approval: "{{ nfd_operator_subscription_automatic_installplan_approval }}"
+    subscription_starting_csv: "{{ nfd_operator_subscription_starting_csv  }}"
+    csv_prefix: "{{ nfd_operator_csv_prefix }}"
