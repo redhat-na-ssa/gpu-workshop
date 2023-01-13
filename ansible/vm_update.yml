@@ -3,6 +3,7 @@
 - hosts: all
   become: true
   tasks:
+
   - name: Update all installed packages using YUM module
     yum:
       name: '*'
@@ -34,6 +35,8 @@
         - libglvnd-opengl
         - libglvnd-devel
         - pkgconfig
+        - firewalld
+        - python3-firewall
       state: present
     
   - ansible.builtin.yum_repository:
@@ -53,6 +56,14 @@
         - libcufft-11-8
         - cuda-cudart-11-8
 
+
   - name: Reboot when packages were updated
     reboot:
     when: yum_update_status.changed
+
+  - name: Open firewall ports
+    ansible.posix.firewalld:
+      port: 8000-9999/tcp
+      permanent: yes
+      state: enabled
+
