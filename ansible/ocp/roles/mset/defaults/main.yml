@@ -1,0 +1,14 @@
+machineset_namespace: openshift-machine-api
+
+####   AWS
+ami_id: ami-02c627a4f7f3cef78
+aws_region: us-east-2
+aws_zone: us-east-2a
+aws_role: gpu
+
+# https://aws.amazon.com/ec2/instance-types/g4/
+aws_instance_type: g4dn.2xlarge
+
+
+
+####   Azure

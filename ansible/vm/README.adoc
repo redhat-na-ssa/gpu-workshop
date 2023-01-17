@@ -23,6 +23,7 @@
 -----
 
 . *RHEL9 virtual machine*
+
 .. Operating system user
 +
 Operating system user needs to be enabled with ability to sudo.

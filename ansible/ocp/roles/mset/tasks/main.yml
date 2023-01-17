@@ -1,0 +1,19 @@
+- name: Get infrastructure ID
+  kubernetes.core.k8s_info:
+    kind: infrastructure
+    api_version: config.openshift.io/v1 
+    name: cluster
+  register: i_response
+- set_fact:
+    infrastructure_id: "{{ i_response.resources[0].status.infrastructureName }}"
+- debug:
+    msg: Infra ID = {{ infrastructure_id }}
+
+- name: "create AWS based machineset with name {{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }} in {{ machineset_namespace }}"
+  k8s:
+    state: present
+    kind: machineset
+    api_version: machine.openshift.io/v1beta1
+    namespace: "{{ machineset_namespace }}"
+    definition: "{{ lookup('template', 'templates/machineset-template-aws.yml') | from_yaml }}"
+
