@@ -373,5 +373,5 @@ Edit `grafana-data-source.yaml` (replace <namespace> and <service-account-token>
 oc create -f grafana-data-source.yaml
 ```
 
-Import the sample DCGM exporter dashboard (`grafana/NVIDIA_DCGM_Exporter_Dashboard.json`)
+Import the sample [DCGM exporter dashboard](https://grafana.com/grafana/dashboards/12239-nvidia-dcgm-exporter-dashboard/) (`grafana/NVIDIA_DCGM_Exporter_Dashboard.json`)
 
