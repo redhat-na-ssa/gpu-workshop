@@ -34,9 +34,11 @@ were developed to allow non-graphics or general purpose computing applications t
 
 ### Installation
 
-#### RHEL
+#### RHEL 9.1
 
-##### Driver Installation
+##### NVIDIA Software Stack Installation
+
+Run the Ansible playbooks (thanks Jeffery).
 
 This workshop is based on using the precompiled
 nvidia drivers that match a specific Red Hat kernel release.
@@ -75,7 +77,7 @@ cuDNN SDK 8.1.0.
 (Optional) TensorRT to improve latency and throughput for inference.
 ```
 
-Running nvidia-smi will cause the kernel modules to load.
+Running nvidia-smi will cause the kernel modules to load will verify the driver installation.
 ```
 nvidia-smi
 ```
@@ -336,7 +338,7 @@ oc apply -f https://raw.githubusercontent.com/red-hat-data-services/odh-manifest
 
 #### GPU Dashboard (Openshift v4.11+)
 
-Install the GPU console plugin dashboard by following the [github documentation](https://github.com/rh-ecosystem-edge/console-plugin-nvidia-gpu).
+Install the GPU console plugin dashboard by following the [Openshift documentation](https://docs.openshift.com/container-platform/4.11/monitoring/nvidia-gpu-admin-dashboard.html).
 
 #### Custom Notebook Limits
 
@@ -360,4 +362,16 @@ These tensorflow notebook examples should run:
 - `docs/site/en/tutorials/keras/classification.ipynb`
 - `docs/site/en/tutorials/quickstart/beginner.ipynb`
 - `docs/site/en/tutorials/quickstart/advanced.ipynb`
+
+#### DIY Grafana GPU Dashboard
+```
+oc create token grafana-serviceaccount --duration=2000h -n models
+```
+
+Edit `grafana-data-source.yaml` (replace <namespace> and <service-account-token>)
+```
+oc create -f grafana-data-source.yaml
+```
+
+Import the sample DCGM exporter dashboard (`grafana/NVIDIA_DCGM_Exporter_Dashboard.json`)
 
