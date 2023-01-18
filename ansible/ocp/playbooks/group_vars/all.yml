@@ -14,13 +14,18 @@ project_admin: user1
 
 project_annotations:
 
-gpu_operator_namespace: gpu-operator-namespace
 
 #################################################
 
+####    GPU MachineSet    ############
+undeploy_gpu_machineset: false
+#################################################
 
-####    Node Feature Discovery (NFD    ############
-
-namespace_nfd: changeme
+####    Node Feature Discovery (NFD)    ############
+nfd_operator_namespace: openshift-nfd
 undeploy_nfd_operator: false
 #################################################
+
+####    NVidia GPU Operator     ########
+gpu_operator_namespace: nvidia-gpu-operator
+#########################################

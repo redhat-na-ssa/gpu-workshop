@@ -26,7 +26,7 @@ spec:
         value:
           ami:
             id: {{ ami_id }}
-          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          apiVersion: {{ aws_api_spec_version }}
           blockDevices:
             - ebs:
                 iops: 0
@@ -51,7 +51,7 @@ spec:
             filters:
               - name: tag:Name
                 values:
-                  - {{ infrastructure_id }}-private-us-east-1a 
+                  - {{ subnet }} 
           tags:
             - name: kubernetes.io/cluster/{{ infrastructure_id }} 
               value: owned

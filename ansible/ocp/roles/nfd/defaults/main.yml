@@ -1,7 +1,6 @@
 ---
 
 # Node Feature Discovery (NFD) operator
-nfd_operator_namespace: "{{ gpu_operator_namespace }}"
 nfd_operator_subscription_template: subscription.yml
 nfd_operator_packagemanifest: nfd
 nfd_operator_subscription_name: nfd

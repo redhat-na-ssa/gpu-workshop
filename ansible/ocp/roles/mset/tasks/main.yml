@@ -6,8 +6,21 @@
   register: i_response
 - set_fact:
     infrastructure_id: "{{ i_response.resources[0].status.infrastructureName }}"
+
+- name: "Get existing machineset info in {{ machineset_namespace }}"
+  kubernetes.core.k8s_info:
+    kind: machineset
+    api_version: machine.openshift.io/v1beta1
+    namespace: "{{ machineset_namespace }}"
+  register: m_response
+- set_fact:
+    ami_id: "{{ m_response.resources[0].spec.template.spec.providerSpec.value.ami.id }}"
+    aws_region: "{{ m_response.resources[0].spec.template.spec.providerSpec.value.placement.region }}"
+    aws_zone: "{{ m_response.resources[0].spec.template.spec.providerSpec.value.placement.availabilityZone }}"
+    subnet: "{{ m_response.resources[0].spec.template.spec.providerSpec.value.subnet.filters[0]['values'][0] }}"
+
 - debug:
-    msg: Infra ID = {{ infrastructure_id }}
+    msg: infra_id={{ infrastructure_id }};  ami_id={{ ami_id }}; aws_region={{ aws_region }}; aws_zone={{ aws_zone }}; subnet={{ subnet }}
 
 - name: "create AWS based machineset with name {{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }} in {{ machineset_namespace }}"
   k8s:
@@ -15,5 +28,20 @@
     kind: machineset
     api_version: machine.openshift.io/v1beta1
     namespace: "{{ machineset_namespace }}"
+    name: "{{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }}"
     definition: "{{ lookup('template', 'templates/machineset-template-aws.yml') | from_yaml }}"
 
+- name: "wait until machineset {{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }} is active in {{ machineset_namespace }}"
+  kubernetes.core.k8s_info:
+    kind: machineset
+    name: "{{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }}"
+    namespace: "{{ machineset_namespace }}"
+    api_version: machine.openshift.io/v1beta1
+  register: r_csv
+  retries: 30
+  delay: 15
+  until:
+    - r_csv.resources | length > 0
+    - r_csv.resources[0] | length > 0
+    - r_csv.resources[0].status.availableReplicas is defined
+    - r_csv.resources[0].status.availableReplicas == 1

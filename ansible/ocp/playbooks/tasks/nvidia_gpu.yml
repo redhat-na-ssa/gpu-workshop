@@ -1,6 +1,7 @@
 ---
 
 - set_fact:
+    namespace: "{{ gpu_operator_namespace }}"
     resources_dir: "{{ resources_base_dir }}/nvidia_gpu"
     work_dir_name: nvidia_gpu
 - include_role:

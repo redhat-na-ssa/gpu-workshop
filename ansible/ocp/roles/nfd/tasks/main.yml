@@ -20,3 +20,12 @@
     automatic_installplan_approval: "{{ nfd_operator_subscription_automatic_installplan_approval }}"
     subscription_starting_csv: "{{ nfd_operator_subscription_starting_csv  }}"
     csv_prefix: "{{ nfd_operator_csv_prefix }}"
+
+- name: "create nfd resource in {{ nfd_operator_namespace }}"
+  k8s:
+    state: present
+    api_version: nfd.openshift.io/v1
+    kind: NodeFeatureDiscovery
+    name: nfd-instance
+    namespace: "{{ nfd_operator_namespace }}"
+    definition: "{{ lookup('template', 'templates/nodefeaturediscovery-nfd-instance.yaml') | from_yaml }}"

@@ -1,11 +1,10 @@
 ---
 
 # NVidea operator
-nvidia_operator_namespace: "{{ gpu_operator_namespace }}"
 nvidia_operator_subscription_template: subscription.yml
-nvidia_operator_packagemanifest: nvidia
-nvidia_operator_subscription_name: nvidia
-nvidia_operator_subscription_channel: stable
+nvidia_operator_packagemanifest: gpu-operator-certified
+nvidia_operator_subscription_name: nvidea
+nvidia_operator_subscription_channel: v22.9
 nvidia_operator_subscription_automatic_installplan_approval: false
 nvidia_operator_subscription_starting_csv: ""
-nvidia_operator_csv_prefix: nvidia
+nvidia_operator_csv_prefix: gpu-operator-certified
