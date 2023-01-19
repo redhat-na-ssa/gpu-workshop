@@ -1,0 +1,12 @@
+---
+
+- name: Deploy GPU Test app
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  run_once: true
+  vars_files:
+    - group_vars/all.yml
+
+  tasks:
+    - include: tasks/gputest.yml

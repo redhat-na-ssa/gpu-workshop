@@ -30,3 +30,7 @@ uninstall_nfd_operator: False
 gpu_operator_namespace: nvidia-gpu-operator
 uninstall_gpu_operator: False
 #########################################
+
+####    GPU Test App     ########
+gputest_namespace: gputest
+#########################################
