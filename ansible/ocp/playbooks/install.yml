@@ -11,6 +11,6 @@
     ACTION: install
 
   tasks:
-  - include: tasks/mset.yml
   - include: tasks/nfd.yml
   - include: tasks/nvidia_gpu.yml
+  - include: tasks/mset.yml

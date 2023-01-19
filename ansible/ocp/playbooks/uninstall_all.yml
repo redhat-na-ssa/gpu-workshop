@@ -19,12 +19,13 @@
   - meta: end_play
     when: acceptance != 'y'
 
+  - include: tasks/mset.yml
+    vars:
+      undeploy_gpu_machineset: True
+
   - include: tasks/nvidia_gpu.yml
     vars:
       uninstall_gpu_operator: True
   - include: tasks/nfd.yml
     vars:
       uninstall_nfd_operator: True
-  - include: tasks/mset.yml
-    vars:
-      undeploy_gpu_machineset: True

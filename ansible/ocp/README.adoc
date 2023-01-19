@@ -92,7 +92,7 @@ Alternatively (on Fedora / RHEL)
 
 .. The cluster should have about 32 GBs RAM and 18 CPUs to allocate to resources of this workshop.
 .. The cluster needs to be provisioned on AWS
-.. The AWS account (associated with the cluster) needs sufficient allotment to instantiate an additional VM of type link:https://aws.amazon.com/ec2/instance-types/g4/[g4dn.2xlarge]
+.. The AWS account (associated with the cluster) needs sufficient allotment to instantiate an additional instance type of type link:https://aws.amazon.com/ec2/instance-types/g4/[g4dn.2xlarge]
 
 
 . *link:https://mirror.openshift.com/pub/openshift-v4/clients/ocp/?C=M;O=D[oc utility]*
