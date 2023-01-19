@@ -1,0 +1,19 @@
+---
+
+- name: Deploy all workshop resources
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  run_once: true
+  vars_files:
+    - group_vars/all.yml
+  vars:
+    ACTION: uninstall
+    undeploy_gpu_machineset: true
+    uninstall_nfd_operator: true
+    uninstall_gpu_operator: true
+
+  tasks:
+  - include: tasks/nvidia_gpu.yml
+  - include: tasks/nfd.yml
+  - include: tasks/mset.yml

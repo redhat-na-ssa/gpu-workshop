@@ -28,4 +28,5 @@
         api_version: machine.openshift.io/v1beta1
         namespace: "{{ machineset_namespace }}"
         name: "{{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }}"
+        wait: true
     

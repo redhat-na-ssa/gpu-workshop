@@ -1,5 +1,14 @@
 ---
 
+- name: "uninstall clusterpolicy resource in {{ gpu_operator_namespace }}"
+  k8s:
+    state: absent
+    api_version: nvidia.com/v1
+    kind: ClusterPolicy
+    name: gpu-cluster-policy
+    namespace: "{{ gpu_operator_namespace }}"
+    wait: true
+
 - name: "delete NVidea GPU operator in {{ gpu_operator_namespace }}"
   import_role:
     name: ../roles/operator_olm
@@ -9,4 +18,4 @@
     subscription_namespace: "{{ gpu_operator_namespace }}"
     subscription_name: "{{ nvidia_gpu_operator_subscription_name }}"
     csv_prefix: "{{ nvidia_gpu_operator_csv_prefix }}"
-  when: undeploy_nvidia_gpu_operator is defined and undeploy_nvidia_gpu_operator == "true"
+  when: uninstall_nvidia_gpu_operator is defined and uninstall_nvidia_gpu_operator == "true"

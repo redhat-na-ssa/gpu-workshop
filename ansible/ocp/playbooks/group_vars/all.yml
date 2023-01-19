@@ -23,9 +23,10 @@ undeploy_gpu_machineset: false
 
 ####    Node Feature Discovery (NFD)    ############
 nfd_operator_namespace: openshift-nfd
-undeploy_nfd_operator: false
+uninstall_nfd_operator: false
 #################################################
 
 ####    NVidia GPU Operator     ########
 gpu_operator_namespace: nvidia-gpu-operator
+uninstall_gpu_operator: false
 #########################################

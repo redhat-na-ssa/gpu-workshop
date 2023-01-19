@@ -1,16 +1,21 @@
-= GPU Workshop Ansible
+:scrollbar:
+:data-uri:
+:toc2:
+:linkattrs:
+
+
+= GPU Workshop Ansible:  VM
 
 :numbered:
 
-== Provisioning: Virtual Machine
+== Purpose
+The purpose of this ansible is to automate & document the configuration of a RHEL 9 virtual machine to support GPU enabled data science tasks. 
 
-=== Purpose
-
-=== Pre-reqs:
+== Pre-reqs
 
 . *ansible*
 
-.. Ansible needs to be installed on the host machine. ie:
+.. Ansible needs to be installed on the local host machine. ie:
 +
 -----
 # dnf install ansible
@@ -38,12 +43,12 @@ All VMs need to already have access to base RHEL 9 dnf/yum repositories.
 +
 The NVidea drivers that are installed (as part of this ansible) require at least 20GB allocated to the `/` filesystem.
 
-=== Procedure
+== Procedure
 
-. Change directory into `vm`:
+. Clone this git project to your local disk and change into this directory.
 +
 -----
-$ cd vm
+$ cd ansible/vm
 -----
 
 . Copy `inventory.example` :
@@ -53,6 +58,8 @@ $ cp inventory.example inventory
 -----
 +
 Make changes to `inventory` file as needed.
++
+Pay particular attention to `changeme` configs.
 
 . Execute:
 +
@@ -60,16 +67,4 @@ Make changes to `inventory` file as needed.
 $ ansible-playbook -i inventory vm_update.yml
 -----
 
-== Provisioning: OpenShift
 
-=== Purpose
-
-=== Pre-reqs:
-
-. *ansible*
-
-.. Ansible needs to be installed on the host machine. ie:
-+
------
-# dnf install ansible
------
