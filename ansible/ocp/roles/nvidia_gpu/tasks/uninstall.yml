@@ -16,6 +16,6 @@
   vars:
     operator_name: nvidia_gpu
     subscription_namespace: "{{ gpu_operator_namespace }}"
-    subscription_name: "{{ nvidia_gpu_operator_subscription_name }}"
-    csv_prefix: "{{ nvidia_gpu_operator_csv_prefix }}"
-  when: uninstall_nvidia_gpu_operator is defined and uninstall_nvidia_gpu_operator == "true"
+    subscription_name: "{{ nvidia_operator_subscription_name }}"
+    csv_prefix: "{{ nvidia_operator_csv_prefix }}"
+  when: uninstall_gpu_operator is defined and uninstall_gpu_operator|bool == true

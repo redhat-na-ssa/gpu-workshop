@@ -1,7 +1,7 @@
 ---
 
 - name: "Uninstall AWS based machineset with name {{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }} in {{ machineset_namespace }}"
-  when: undeploy_gpu_machineset is defined and undeploy_gpu_machineset == "true"
+  when: undeploy_gpu_machineset is defined and undeploy_gpu_machineset|bool == True
   block:
     - kubernetes.core.k8s_info:
         kind: infrastructure
@@ -29,4 +29,4 @@
         namespace: "{{ machineset_namespace }}"
         name: "{{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }}"
         wait: true
-    
+   

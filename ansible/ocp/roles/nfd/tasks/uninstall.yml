@@ -18,4 +18,4 @@
     subscription_namespace: "{{ nfd_operator_namespace }}"
     subscription_name: "{{ nfd_operator_subscription_name }}"
     csv_prefix: "{{ nfd_operator_csv_prefix }}"
-  when: uninstall_nfd_operator is defined and uninstall_nfd_operator == "true"
+  when: uninstall_nfd_operator is defined and uninstall_nfd_operator|bool == true

@@ -3,7 +3,7 @@
 # NVidea operator
 nvidia_operator_subscription_template: subscription.yml
 nvidia_operator_packagemanifest: gpu-operator-certified
-nvidia_operator_subscription_name: nvidea
+nvidia_operator_subscription_name: gpu-operator-certified
 nvidia_operator_subscription_channel: v22.9
 nvidia_operator_subscription_automatic_installplan_approval: false
 nvidia_operator_subscription_starting_csv: ""

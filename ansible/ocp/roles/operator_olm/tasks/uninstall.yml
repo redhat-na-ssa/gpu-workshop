@@ -1,6 +1,6 @@
 ---
 
-- name: "get CSV for "
+- name: "get CSV for subscription {{ subscription_name }} in {{ subscription_namespace }}"
   kubernetes.core.k8s_info:
     kind: ClusterServiceVersion
     api_version: operators.coreos.com/v1alpha1
@@ -12,7 +12,7 @@
     msg: "{{ r_subscription.resources[0].metadata.name }}"
   when: r_subscription.resources[0] is defined
 
-- name: "remove clusterserviceversion for {{ operator_name }} operator"
+- name: "remove clusterserviceversion for {{ operator_name }} operator in {{ subscription_namespace }}"
   k8s:
     state: absent
     kind: ClusterServiceVersion
@@ -22,7 +22,7 @@
   when: 
   - r_subscription.resources[0] is defined
 
-- name: "remove subscription for {{ operator_name }} operator"
+- name: "remove subscription for {{ operator_name }} operator in {{ subscription_namespace }}"
   k8s:
     state: absent
     kind: Subscription

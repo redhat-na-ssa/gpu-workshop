@@ -7,7 +7,6 @@ aws_role: gpu
 aws_instance_type: g4dn.2xlarge
 
 aws_api_spec_version: 'machine.openshift.io/v1beta1'
-#aws_api_spec_version: 'awsproviderconfig.openshift.io/v1beta1'
 
 
 

@@ -18,15 +18,15 @@ project_annotations:
 #################################################
 
 ####    GPU MachineSet    ############
-undeploy_gpu_machineset: false
+undeploy_gpu_machineset: False
 #################################################
 
 ####    Node Feature Discovery (NFD)    ############
 nfd_operator_namespace: openshift-nfd
-uninstall_nfd_operator: false
+uninstall_nfd_operator: False
 #################################################
 
 ####    NVidia GPU Operator     ########
 gpu_operator_namespace: nvidia-gpu-operator
-uninstall_gpu_operator: false
+uninstall_gpu_operator: False
 #########################################

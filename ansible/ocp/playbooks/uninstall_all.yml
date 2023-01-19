@@ -1,5 +1,6 @@
 ---
 
+
 - name: Deploy all workshop resources
   hosts: localhost
   connection: local
@@ -9,11 +10,21 @@
     - group_vars/all.yml
   vars:
     ACTION: uninstall
-    undeploy_gpu_machineset: true
-    uninstall_nfd_operator: true
-    uninstall_gpu_operator: true
+  vars_prompt:
+    - name: acceptance
+      prompt: DANGER - THIS PLAYBOOK WILL UNINSTALL OPERATORS!!!!  Are you sure you want to do that (y/n)? 
 
   tasks:
+
+  - meta: end_play
+    when: acceptance != 'y'
+
   - include: tasks/nvidia_gpu.yml
+    vars:
+      uninstall_gpu_operator: True
   - include: tasks/nfd.yml
+    vars:
+      uninstall_nfd_operator: True
   - include: tasks/mset.yml
+    vars:
+      undeploy_gpu_machineset: True
