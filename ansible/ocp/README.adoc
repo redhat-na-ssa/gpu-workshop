@@ -113,10 +113,23 @@ $ cd ansible/ocp
 
 === Install
 
-. Execute _ansible_playbook_
+. Review the various ansible roles (and their sequential order of execution) in `playbooks/install.yml` 
+
+. Execute all roles of _ansible_playbook_:
 +
 -----
 $ ansible-playbook playbooks/install.yml
+-----
+
+
+. Optional: Execute each role individually.
++
+There is an ansible play for each role in the `playbooks` directory.
++
+You can optionally execute each play individually.  ie:
++
+-----
+$ ansible-playbook playbooks/mset.yml
 -----
 
 === Optional: Uninstall

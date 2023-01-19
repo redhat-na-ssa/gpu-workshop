@@ -31,7 +31,7 @@
     name: "{{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }}"
     definition: "{{ lookup('template', 'templates/machineset-template-aws.yml') | from_yaml }}"
 
-- name: "wait until machineset {{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }} is active in {{ machineset_namespace }}"
+- name: "{{ machineset_namespace }}: wait until machineset {{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }} active.  $ oc get machine -n {{ machineset_namespace }} -w"
   kubernetes.core.k8s_info:
     kind: machineset
     name: "{{ infrastructure_id }}-{{ aws_role }}-{{ aws_zone }}"

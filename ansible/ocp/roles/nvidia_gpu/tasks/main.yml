@@ -21,9 +21,6 @@
     subscription_starting_csv: "{{ nvidia_operator_subscription_starting_csv  }}"
     csv_prefix: "{{ nvidia_operator_csv_prefix }}"
 
-# oc get node ip-10-0-146-246.us-east-2.compute.internal -o json | jq -r '.metadata.annotations."nfd.node.kubernetes.io/feature-labels"' | tr "," "\n"
-
-
 - name: "create clusterpolicy resource in {{ gpu_operator_namespace }}"
   k8s:
     state: present
@@ -33,7 +30,7 @@
     namespace: "{{ gpu_operator_namespace }}"
     definition: "{{ lookup('template', 'templates/clusterpolicy-gpu-cluster-policy.yaml') | from_yaml }}"
 
-- name: "wait until clusterpolicy resource is ready in {{ gpu_operator_namespace }}"
+- name: "{{ gpu_operator_namespace }}: wait until clusterpolicy ready in {{ gpu_operator_namespace }}. $ oc get ClusterPolicy gpu-cluster-policy -n {{ gpu_operator_namespace }} -w"
   kubernetes.core.k8s_info:
     kind: ClusterPolicy
     name: gpu-cluster-policy
@@ -47,4 +44,16 @@
     - r_csv.resources[0] | length > 0
     - r_csv.resources[0].status is defined
     - r_csv.resources[0].status.state == "ready"
+
+# oc get node ip-10-0-146-246.us-east-2.compute.internal -o json | jq -r '.metadata.annotations."nfd.node.kubernetes.io/feature-labels"' | tr "," "\n"
+- kubernetes.core.k8s_info:
+    kind: Node
+    label_selectors:
+      - node-role.kubernetes.io/gpu
+  register: n_response
+- debug:
+    msg: 
+      - "GPU annotations for node:  {{ n_response.resources[0].metadata.name  }} = "
+      - "{{ n_response.resources[0].metadata.annotations['nfd.node.kubernetes.io/feature-labels'] | split(',') }}"
+
 

@@ -29,3 +29,12 @@
     name: nfd-instance
     namespace: "{{ nfd_operator_namespace }}"
     definition: "{{ lookup('template', 'templates/nodefeaturediscovery-nfd-instance.yaml') | from_yaml }}"
+
+- name: "{{ nfd_operator_namespace }}: wait until nfd is active.  $ oc get NodeFeatureDiscovery/nfd-instance -n {{ nfd_operator_namespace }} -w"
+  shell: |
+    {{ openshift_cli }} get NodeFeatureDiscovery/nfd-instance -o jsonpath='{.status.conditions[?(@.type == "Available")].status}' -n {{ nfd_operator_namespace }}
+  register: result
+  until: result.stdout == 'True'
+  retries: 30
+  delay: 10
+  changed_when: False
