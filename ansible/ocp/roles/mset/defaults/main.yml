@@ -1,0 +1,13 @@
+machineset_namespace: openshift-machine-api
+
+####   AWS
+aws_role: gpu
+
+# https://aws.amazon.com/ec2/instance-types/g4/
+aws_instance_type: g4dn.2xlarge
+
+aws_api_spec_version: 'machine.openshift.io/v1beta1'
+
+
+
+####   Azure

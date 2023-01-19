@@ -1,0 +1,104 @@
+---
+
+kind: List
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: {{ application_name }}
+      monitoring: prometheus
+      expose: "true"
+    name: {{ application_name }}
+  spec:
+    ports:
+      - name: http
+        port: 8888
+        protocol: TCP
+        targetPort: 8888
+    selector:
+      group: sepsis 
+      app: {{ application_name }}
+    sessionAffinity: None
+    type: ClusterIP
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: {{ application_name }}
+    name: {{ application_name }}
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 2
+    selector:
+      group: sepsis
+      app: {{ application_name }}
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 3600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          group: sepsis
+          app: {{ application_name }}
+      spec:
+        containers:
+          - imagePullPolicy: IfNotPresent
+            name: {{ application_name }}
+            ports:
+              - containerPort: 9779
+                name: prometheus
+                protocol: TCP
+            livenessProbe:
+              failureThreshold: 3
+              httpGet:
+                port: 8888
+                scheme: HTTP
+              initialDelaySeconds: 30
+              periodSeconds: 30
+              timeoutSeconds: 3
+            readinessProbe:
+              failureThreshold: 3
+              httpGet:
+                port: 8888
+                scheme: HTTP
+              initialDelaySeconds: 30
+              periodSeconds: 30
+              timeoutSeconds: 3
+            resources:
+              limits:
+                nvidia.com/gpu: '1'
+                memory: '3Gi'
+              requests:
+                nvidia.com/gpu: '1'
+                memory: '250Mi'
+            securityContext:
+              privileged: false
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: {{ application_name }}
+        serviceAccountName: {{ application_name }}
+        terminationGracePeriodSeconds: 30
+    triggers:
+      - type: ConfigChange
+      - imageChangeParams:
+          automatic: true
+          containerNames:
+            - {{ application_name }}
+          from:
+            kind: ImageStreamTag
+            name: "{{ application_name }}:{{ service_image_tag }}"
+        type: ImageChange
+

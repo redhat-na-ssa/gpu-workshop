@@ -1,0 +1,141 @@
+:scrollbar:
+:data-uri:
+:toc2:
+:linkattrs:
+
+= GPU Workshop Ansible: OCP
+
+:numbered:
+
+== Purpose
+
+The purpose of this ansible is to automate & document the configuration of an OpenShift Container Platform cluster to support GPU enabled data science tasks. 
+
+== Pre-reqs
+
+. *ansible*
+
+.. Ansible needs to be installed on the host machine. ie:
++
+-----
+# dnf install ansible
+-----
+
+.. It also needs to be enabled with the following collections:
+
+... link:https://docs.ansible.com/ansible/latest/collections/kubernetes/core/index.html[kubernetes]
+
+.... Install:
++
+-----
+$ ansible-galaxy collection install kubernetes.core
+-----
++
+Alternatively (on Fedora / RHEL)
++
+-----
+# dnf install ansible-collection-kubernetes-core.noarch
+-----
+
+
+.... Test:
++
+-----
+$ ansible-doc -t module kubernetes.core.helm
+-----
++
+You should see output similar to the following:
++
+-----
+> KUBERNETES.CORE.HELM    (/usr/lib/python3.8/site-packages/ansible_collections/kubernetes/core/plugins/modules/helm.py)
+
+        Install, upgrade, delete packages with the Helm package
+        manager.
+
+ADDED IN: version 0.11.0 of kubernetes.core
+...
+-----
+
+... link:https://docs.ansible.com/ansible/5/collections/community/general/docsite/filter_guide_selecting_json_data.html[jmespath]
++
+ie: On Linux systems, the following steps tend to work:
+
+.... Check version of python used by ansible:
++
+-----
+$ ansible --version
+
+
+ansible [core 2.12.2]
+  ...
+
+  python version = 3.8.12 (default, Sep 16 2021, 10:46:05) [GCC 8.5.0 20210514 (Red Hat 8.5.0-3)]
+
+  ...
+
+-----
+
+.... Using the version of python leveraged by ansible, install dependency as root user:
++
+-----
+# python3.8 -m pip install jmespath
+-----
++
+Alternatively (on Fedora / RHEL)
++
+-----
+# dnf install python3-jmespath
+-----
+
+
+. *OpenShift Container Platform* cluster ( >= v 4.10 )
+
+.. The cluster should have about 32 GBs RAM and 18 CPUs to allocate to resources of this workshop.
+.. The cluster needs to be provisioned on AWS
+.. The AWS account (associated with the cluster) needs sufficient allotment to instantiate an additional instance type of type link:https://aws.amazon.com/ec2/instance-types/g4/[g4dn.2xlarge]
+
+
+. *link:https://mirror.openshift.com/pub/openshift-v4/clients/ocp/?C=M;O=D[oc utility]*
++
+Needs to correspond to the version of your OpenShift cluster.
++
+You should be authenticated into your OpenShift cluster at the command line as a `cluster-admin` user.
+
+
+== Procedure
+
+. Clone this git project to your local disk and change into this directory.
++
+-----
+$ cd ansible/ocp
+-----
+
+
+=== Install
+
+. Review the various ansible roles (and their sequential order of execution) in `playbooks/install.yml` 
+
+. Execute all roles of _ansible_playbook_:
++
+-----
+$ ansible-playbook playbooks/install.yml
+-----
+
+
+. Optional: Execute each role individually.
++
+There is an ansible play for each role in the `playbooks` directory.
++
+You can optionally execute each play individually.  ie:
++
+-----
+$ ansible-playbook playbooks/mset.yml
+-----
+
+=== Optional: Uninstall
+
+. Execute _ansible_playbook_
++
+-----
+$ ansible-playbook playbooks/uninstall_all.yml
+-----

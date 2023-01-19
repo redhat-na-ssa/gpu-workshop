@@ -1,0 +1,36 @@
+---
+
+#############    General    #######################
+home_dir: "{{ playbook_dir }}/.."
+
+# resources dir
+resources_base_dir: "{{ home_dir }}/resources"
+
+# oc executable
+openshift_cli: oc
+
+# The OCP user that will own all resources in the generated OCP namespace
+project_admin: user1
+
+project_annotations:
+
+
+#################################################
+
+####    GPU MachineSet    ############
+undeploy_gpu_machineset: False
+#################################################
+
+####    Node Feature Discovery (NFD)    ############
+nfd_operator_namespace: openshift-nfd
+uninstall_nfd_operator: False
+#################################################
+
+####    NVidia GPU Operator     ########
+gpu_operator_namespace: nvidia-gpu-operator
+uninstall_gpu_operator: False
+#########################################
+
+####    GPU Test App     ########
+gputest_namespace: gputest
+#########################################

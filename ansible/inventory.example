@@ -1,9 +1,0 @@
-# NOTE:  Prior to executing ansible, please copy and modify the resultant file
-
-[azure]
-<change_me host or ip>  ansible_connection=ssh  ansible_ssh_private_key_file=/path/to/.ssh/<private_key>  ansible_user=azureuser
-
-[aws]
-
-[local]
-192.168.122.<changeme> ansible_connection=ssh  ansible_user=azureuser ansible_sudo_pass=<changeme>

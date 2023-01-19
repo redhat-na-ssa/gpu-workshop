@@ -1,0 +1,21 @@
+---
+
+- set_fact:
+    namespace: "{{ nfd_operator_namespace }}"
+    resources_dir: "{{ resources_base_dir }}/nfd"
+    work_dir_name: nfd
+- include_role:
+    name: ../roles/nfd
+  when: >
+    ACTION is not defined or
+    ACTION is none or
+    ACTION|trim() == "" or
+    ACTION|trim() == "install"
+
+
+- include_role:
+    name: ../roles/nfd
+    tasks_from: uninstall
+  when: >
+    ACTION is defined and
+    ACTION|trim() == "uninstall"

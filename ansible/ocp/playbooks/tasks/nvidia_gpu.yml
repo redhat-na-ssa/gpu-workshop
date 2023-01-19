@@ -1,0 +1,21 @@
+---
+
+- set_fact:
+    namespace: "{{ gpu_operator_namespace }}"
+    resources_dir: "{{ resources_base_dir }}/nvidia_gpu"
+    work_dir_name: nvidia_gpu
+- include_role:
+    name: ../roles/nvidia_gpu
+  when: >
+    ACTION is not defined or
+    ACTION is none or
+    ACTION|trim() == "" or
+    ACTION|trim() == "install"
+
+
+- include_role:
+    name: ../roles/nvidia_gpu
+    tasks_from: uninstall
+  when: >
+    ACTION is defined and
+    ACTION|trim() == "uninstall"

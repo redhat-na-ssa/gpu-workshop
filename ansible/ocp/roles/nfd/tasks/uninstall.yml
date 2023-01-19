@@ -1,0 +1,21 @@
+---
+
+- name: "uninstall nfd resource in {{ nfd_operator_namespace }}"
+  k8s:
+    state: absent
+    api_version: nfd.openshift.io/v1
+    kind: NodeFeatureDiscovery
+    name: nfd-instance
+    namespace: "{{ nfd_operator_namespace }}"
+    wait: true
+
+- name: "delete nfd operator in {{ nfd_operator_namespace }}"
+  import_role:
+    name: ../roles/operator_olm
+    tasks_from: uninstall
+  vars:
+    operator_name: nfd
+    subscription_namespace: "{{ nfd_operator_namespace }}"
+    subscription_name: "{{ nfd_operator_subscription_name }}"
+    csv_prefix: "{{ nfd_operator_csv_prefix }}"
+  when: uninstall_nfd_operator is defined and uninstall_nfd_operator|bool == true

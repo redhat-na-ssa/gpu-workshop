@@ -1,0 +1,40 @@
+---
+
+- name: "create operatorgroup in {{ nfd_operator_namespace }}"
+  import_role:
+    name: ../roles/operatorgroup
+  vars:
+    operatorgroup_name: "{{ nfd_operator_namespace }}"
+    operatorgroup_namespace: "{{ nfd_operator_namespace }}"
+    operatorgroup_target_namespace: "{{ nfd_operator_namespace }}"
+
+- name: "deploy nfd operator in {{ nfd_operator_namespace }}"
+  import_role:
+    name: ../roles/operator_olm
+  vars:
+    operator_name: "{{ nfd_operator_packagemanifest }}"
+    packagemanifest: "{{ nfd_operator_packagemanifest }}"
+    subscription_channel: "{{ nfd_operator_subscription_channel }}"
+    subscription_namespace: "{{ nfd_operator_namespace }}"
+    subscription_name: "{{ nfd_operator_subscription_name }}"
+    automatic_installplan_approval: "{{ nfd_operator_subscription_automatic_installplan_approval }}"
+    subscription_starting_csv: "{{ nfd_operator_subscription_starting_csv  }}"
+    csv_prefix: "{{ nfd_operator_csv_prefix }}"
+
+- name: "create nfd resource in {{ nfd_operator_namespace }}"
+  k8s:
+    state: present
+    api_version: nfd.openshift.io/v1
+    kind: NodeFeatureDiscovery
+    name: nfd-instance
+    namespace: "{{ nfd_operator_namespace }}"
+    definition: "{{ lookup('template', 'templates/nodefeaturediscovery-nfd-instance.yaml') | from_yaml }}"
+
+- name: "{{ nfd_operator_namespace }}: wait until nfd is active.  $ oc get NodeFeatureDiscovery/nfd-instance -n {{ nfd_operator_namespace }} -w"
+  shell: |
+    {{ openshift_cli }} get NodeFeatureDiscovery/nfd-instance -o jsonpath='{.status.conditions[?(@.type == "Available")].status}' -n {{ nfd_operator_namespace }}
+  register: result
+  until: result.stdout == 'True'
+  retries: 30
+  delay: 10
+  changed_when: False

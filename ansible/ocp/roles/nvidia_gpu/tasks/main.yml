@@ -1,0 +1,46 @@
+---
+
+- name: "create operatorgroup in {{ gpu_operator_namespace }}"
+  import_role:
+    name: ../roles/operatorgroup
+  vars:
+    operatorgroup_name: "{{ gpu_operator_namespace }}"
+    operatorgroup_namespace: "{{ gpu_operator_namespace }}"
+    operatorgroup_target_namespace: "{{ gpu_operator_namespace }}"
+
+- name: "deploy nvidia operator in {{ gpu_operator_namespace }}"
+  import_role:
+    name: ../roles/operator_olm
+  vars:
+    operator_name: "{{ nvidia_operator_packagemanifest }}"
+    packagemanifest: "{{ nvidia_operator_packagemanifest }}"
+    subscription_channel: "{{ nvidia_operator_subscription_channel }}"
+    subscription_namespace: "{{ gpu_operator_namespace }}"
+    subscription_name: "{{ nvidia_operator_subscription_name }}"
+    automatic_installplan_approval: "{{ nvidia_operator_subscription_automatic_installplan_approval }}"
+    subscription_starting_csv: "{{ nvidia_operator_subscription_starting_csv  }}"
+    csv_prefix: "{{ nvidia_operator_csv_prefix }}"
+
+- name: "create clusterpolicy resource in {{ gpu_operator_namespace }}"
+  k8s:
+    state: present
+    api_version: nvidia.com/v1
+    kind: ClusterPolicy
+    name: gpu-cluster-policy
+    namespace: "{{ gpu_operator_namespace }}"
+    definition: "{{ lookup('template', 'templates/clusterpolicy-gpu-cluster-policy.yaml') | from_yaml }}"
+
+- name: "{{ gpu_operator_namespace }}: wait until clusterpolicy ready in {{ gpu_operator_namespace }}. $ oc get ClusterPolicy gpu-cluster-policy -n {{ gpu_operator_namespace }} -w"
+  kubernetes.core.k8s_info:
+    kind: ClusterPolicy
+    name: gpu-cluster-policy
+    namespace: "{{ gpu_operator_namespace }}"
+    api_version: nvidia.com/v1
+  register: r_csv
+  retries: 30
+  delay: 15
+  until:
+    - r_csv.resources | length > 0
+    - r_csv.resources[0] | length > 0
+    - r_csv.resources[0].status is defined
+    - r_csv.resources[0].status.state == "ready"

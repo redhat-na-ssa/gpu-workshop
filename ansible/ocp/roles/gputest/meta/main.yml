@@ -1,0 +1,13 @@
+---
+
+dependencies:
+  - role: openshift_project
+    when: >
+      ACTION is not defined or
+      ACTION is none or
+      ACTION|trim() == "" or
+      ACTION|trim() == "install"
+    vars:
+      allow_duplicate_param: gputest
+  - role: openshift_domain
+

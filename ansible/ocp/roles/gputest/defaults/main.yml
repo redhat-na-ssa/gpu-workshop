@@ -1,0 +1,7 @@
+application_name: gputest
+
+service_account: "{{ application_name }}"
+binary_imagestream_template: binary-imagestream.yml 
+service_image: quay.io/modh/cuda-notebooks 
+service_image_tag: cuda-jupyter-minimal-ubi8-python-3.8-c878383	
+application_template: app.yml

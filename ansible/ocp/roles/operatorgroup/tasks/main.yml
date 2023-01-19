@@ -1,0 +1,8 @@
+---
+
+- name: "Create operatorgroup in {{ operatorgroup_namespace }}"
+  k8s:
+    state: present
+    name: "{{ operatorgroup_name }}"
+    namespace: "{{ operatorgroup_namespace }}"
+    definition: "{{ lookup('template', 'templates/operatorgroup.yml') | from_yaml }}"

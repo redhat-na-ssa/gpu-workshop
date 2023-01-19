@@ -1,0 +1,25 @@
+---
+
+- name: create {{ service_account }} service account for {{ application_name }} application
+  kubernetes.core.k8s:
+    state: present
+    name: "{{ service_account }}"
+    definition:
+      apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: "{{ service_account }}"
+        namespace: "{{ namespace }}"
+
+- import_tasks: deploy_from_image.yml
+
+- set_fact:
+    route_hostname: "{{ application_name }}-{{ namespace }}.{{ ocp_domain_host.stdout }}"
+- name: "deploy {{ application_name }} route {{ route_hostname }}"
+  kubernetes.core.k8s:
+    state: present
+    kind: Deployment
+    definition: "{{ lookup('template', 'templates/route.yml') | from_yaml }}"
+    namespace: "{{ namespace }}"
+
+###########################################################
