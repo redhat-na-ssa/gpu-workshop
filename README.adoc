@@ -33,34 +33,7 @@ GPUs provide a programable graphics pipeline for realistic image rendering.
 
 == RHEL 9.1
 
-link:ansible/vm/README.adoc[Ansible based provisioning]
-
-==== AWS
-
-If running on AWS EC2, the AWS RHUI repos shoud be disabled. 
-
-```
-systemctl disable choose_repo
-yum-config-manager --disable rhel-8-appstream-rhui-rpms 
-yum-config-manager --disable rhel-8-baseos-rhui-rpms
-yum-config-manager --disable rhui-client-config-server-8
-reboot
-```
-
-Check that `enabled=0` in `/etc/yum/pluginconf.d/amazon-id.conf`.
-
-```
-subscription-manager register --username=user@gmail.com
-```
-
-The system should have an active RHEL subcription.
-
-Check out this [blog post to install the nvidia drivers](https://linuxhint.com/install-nvidia-drivers-rhel-9/#B)
-
-[TensorFlow's installation instructions](https://www.tensorflow.org/install/pip#software_requirements)
-list the GPU dependencies (current as of December 13 2022):
-
-The following NVIDIA® software are required for GPU support.
+The following NVIDIA® software is required for GPU support.
 ```
 
 NVIDIA® GPU drivers version 450.80.02 or higher.
@@ -69,12 +42,14 @@ cuDNN SDK 8.1.0.
 (Optional) TensorRT to improve latency and throughput for inference.
 ```
 
-Running nvidia-smi will cause the kernel modules to load will verify the driver installation.
+The easy way to install the NVIDIA stack is to use link:ansible/vm/README.adoc[Ansible based provisioning].
+
+Once the stack is built, running the `nvidia-smi` utility will cause the kernel modules to load will verify the driver installation.
 ```
 nvidia-smi
 ```
 
-The expected output should resemble the following.
+Example output:
 ```
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 510.47.03    Driver Version: 510.47.03    CUDA Version: 11.6     |
@@ -97,35 +72,13 @@ The expected output should resemble the following.
 +-----------------------------------------------------------------------------+
 ```
 
-Confirm the kernel modules are loaded.
-```
-lsmod|grep nvidia
-```
-```
-nvidia_drm             61440  0
-nvidia_modeset       1118208  1 nvidia_drm
-nvidia_uvm           1085440  0
-nvidia              38502400  2 nvidia_uvm,nvidia_modeset
-drm_kms_helper        253952  1 nvidia_drm
-drm                   573440  4 drm_kms_helper,nvidia,nvidia_drm
-```
-
-Install the cuda and cudnn packages.
-
-```
-yum install cuda libcudnn8 -y
-```
-
 ==== RHEL Testing
 
 ###### Non-container app test
 
-Now the system should be ready to run a gpu workload.
-
-Run a simple test to validate the software stack.
+Now the system should be ready to run a gpu workload. Run a simple test to validate the software stack.
 
 Create a python environment and install tensorflow.
-
 ```
 python3 -m venv venv
 source venv/bin/activate
@@ -136,9 +89,9 @@ Run a simple tensorflow test to confirm a GPU device is found.
 ```
 ipython
 
-import tensorflow as tf
+>>> import tensorflow as tf
 
-tf.config.list_logical_devices()
+>>> tf.config.list_logical_devices()
 ```
 
 Sample output.

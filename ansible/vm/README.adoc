@@ -45,7 +45,28 @@ All VMs need to already have access to base RHEL 9 dnf/yum repositories.
 
 .. Storage
 +
-The NVidea drivers that are installed (as part of this ansible) require at least 20GB allocated to the `/` filesystem.
+The NVIDIA drivers that are installed (as part of this ansible) require at least 20GB allocated to the `/` filesystem.
+
+. *RHEL9 localhost example*
+
+.. Login to the RHEL9 and assume that you have `sudo` privileges with a password.
+
+.. Create the `inventory` file and set the user name.
++
+```
+[local]
+localhost ansible_connection=ssh  ansible_user=<change-me>
+```
+
+.. Create a python virtual environment.
++
+```
+$ python -m venv ~/venv
+$ source ~/venv/bin/activate
+$ pip install pip ansible -Uq
+```
+
+.. Run the ansible playbook as noted below.
 
 == Procedure
 
