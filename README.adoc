@@ -18,7 +18,8 @@ operations (dot product, cross product and matrix multiplies). It turns out thes
 besides 3D graphics including high performance computing and machine learning. As a result, software libraries (i.e. CUDA) 
 were developed to allow non-graphics or general purpose computing applications to take advantage of GPU hardware.
 
-![non-Shaded Skull](./images/skull.jpg) ![Shaded Skull](./images/skullshaded.jpg)
+image::./images/skull.jpg[non-Shaded Skull]
+image::./images/skullshaded.jpg[Shaded Skull]
 
 
 == RHEL 9.1
