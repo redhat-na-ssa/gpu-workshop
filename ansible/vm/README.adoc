@@ -9,7 +9,11 @@
 :numbered:
 
 == Purpose
-The purpose of this ansible is to automate & document the configuration of a RHEL 9 virtual machine to support GPU enabled data science tasks. 
+The purpose of this ansible is to automate & document the configuration of a RHEL 9 virtual machine to support GPU enabled data science tasks.
+
+
+This workshop is based on using the precompiled
+nvidia drivers that match a specific Red Hat kernel release.
 
 == Pre-reqs
 
