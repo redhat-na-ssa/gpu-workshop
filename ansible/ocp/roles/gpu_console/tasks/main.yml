@@ -1,0 +1,21 @@
+---
+
+- name: "Add gpu-console chart repo at {{ helm_repo_url }}"
+  kubernetes.core.helm_repository:
+    name: rh-ecosystem-edge
+    repo_url: "{{ helm_repo_url }}"
+
+- name: "Deploy console-plugin-nvidia-gpu helm chart into {{ gpu_operator_namespace }}"
+  kubernetes.core.helm:
+    name: console-plugin-nvidia-gpu
+    chart_ref: rh-ecosystem-edge/console-plugin-nvidia-gpu
+    release_namespace: "{{ gpu_operator_namespace }}"
+    wait: true
+
+- name: "enable gpu_console plugin in consoles.operator.openshift.io"
+  shell: |
+    {{ openshift_cli }} patch consoles.operator.openshift.io cluster --patch '{ "spec": { "plugins": ["console-plugin-nvidia-gpu"] } }' --type=merge -n {{ gpu_operator_namespace }}
+
+- name: add the required DCGM Exporter metrics ConfigMap to the existing NVIDIA operator ClusterPolicy CR
+  shell: |
+    {{ openshift_cli }} patch clusterpolicies.nvidia.com gpu-cluster-policy --patch '{ "spec": { "dcgmExporter": { "config": { "name": "console-plugin-nvidia-gpu" } } } }' --type=merge

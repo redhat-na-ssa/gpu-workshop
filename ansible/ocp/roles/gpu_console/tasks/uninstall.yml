@@ -1,0 +1,10 @@
+---
+
+- name: "delete Deployment: console-plugin-nvidia-gpu"
+  kubernetes.core.k8s:
+    name: console-plugin-nvidia-gpu
+    state: absent
+    kind: Deployment
+    namespace: "{{ gpu_operator_namespace }}"
+    wait: true
+

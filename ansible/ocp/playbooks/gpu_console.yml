@@ -1,0 +1,12 @@
+---
+
+- name: Deploy GPU Console
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  run_once: true
+  vars_files:
+    - group_vars/all.yml
+
+  tasks:
+    - include: tasks/gpu_console.yml
