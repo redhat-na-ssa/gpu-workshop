@@ -24,8 +24,7 @@ were developed to allow non-graphics or general purpose computing applications t
 [.left]
 .Fixed Pipeline
 image::./images/skull.jpg[non-Shaded Skull]
-
-[.right]
+[.left]
 .Programmable Pipeline
 image::./images/skullshaded.jpg[Shaded Skull]
 --
