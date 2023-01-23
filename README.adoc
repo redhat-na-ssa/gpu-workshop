@@ -1,28 +1,16 @@
-# Red Hat GPU Workshop 
+:scrollbar:
+:data-uri:
+:toc2:
+:linkattrs:
 
-## Overview
+= Red Hat GPU Workshop 
+
+:numbered:
+
+== Overview
 A workshop focused on using NVIDIA GPUs on Red Hat platforms. 
 
-### Table of Contents
-
-1. Abstract
-1. [Background](#background)
-1. Audience
-1. Prerequisites
-1. Labs
-1. [Installation](#installation)
-1. Appendix
-1. References
-
-- [RHEL 9.1](#RHEL)
-    - [Driver Installation](#driver-installation)
-    - [Testing](#rhel-testing)
-- [Openshift 4.10](#Openshift)
-    - [Operator Installation](#operator-installation)
-    - [Testing](#openshift-testing)
-    - [OpenDataHub](#opendatahub)
-
-### Background
+== Background
 
 Graphics Processing Units (GPUs) were originally invented to allow application developers to program 3D graphics accelerators 
 to render photo realistic images in real time. The key is GPUs accelerate matrix and vector math 
@@ -32,18 +20,12 @@ were developed to allow non-graphics or general purpose computing applications t
 
 ![non-Shaded Skull](./images/skull.jpg) ![Shaded Skull](./images/skullshaded.jpg)
 
-### Installation
 
-#### RHEL 9.1
+== RHEL 9.1
 
-##### NVIDIA Software Stack Installation
+link:ansible/vm/README.adoc[Ansible based provisioning]
 
-Run the Ansible playbooks (thanks Jeffery).
-
-This workshop is based on using the precompiled
-nvidia drivers that match a specific Red Hat kernel release.
-
-##### AWS
+==== AWS
 
 If running on AWS EC2, the AWS RHUI repos shoud be disabled. 
 
@@ -124,7 +106,7 @@ Install the cuda and cudnn packages.
 yum install cuda libcudnn8 -y
 ```
 
-##### RHEL Testing
+==== RHEL Testing
 
 ###### Non-container app test
 
@@ -183,7 +165,9 @@ The `nvidia-smi` output should be similar to what was reported above.
 podman run --rm --security-opt=label=disable --hooks-dir=/usr/share/containers/oci/hooks.d/ nvidia/cuda:11.0-base nvidia-smi
 ```
 
-### Openshift 
+== Openshift
+
+link:ansible/ocp/README.adoc[Ansible based provisioning]
 
 ##### Check entitlements.
 ```
@@ -351,7 +335,7 @@ Apply the following configmap before the launching jupyterhub server.
 oc apply -f src/jupyterhub-notebook-sizes.yml
 ```
 
-#### Demos
+== Demos
 
 From within Jupyter, clone the following repo:
 
@@ -363,7 +347,7 @@ These tensorflow notebook examples should run:
 - `docs/site/en/tutorials/quickstart/beginner.ipynb`
 - `docs/site/en/tutorials/quickstart/advanced.ipynb`
 
-#### DIY Grafana GPU Dashboard
+== DIY Grafana GPU Dashboard
 ```
 oc create token grafana-serviceaccount --duration=2000h -n models
 ```
