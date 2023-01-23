@@ -19,6 +19,7 @@
   - meta: end_play
     when: acceptance != 'y'
 
+  - include: tasks/gpu_console.yml
   - include: tasks/gputest.yml
   - include: tasks/mset.yml
     vars:

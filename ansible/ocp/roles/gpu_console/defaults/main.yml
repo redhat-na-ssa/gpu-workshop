@@ -1,0 +1,5 @@
+---
+
+# GPU Console 
+
+helm_repo_url: https://rh-ecosystem-edge.github.io/console-plugin-nvidia-gpu

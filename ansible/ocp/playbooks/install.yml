@@ -15,3 +15,4 @@
   - include: tasks/nvidia_gpu.yml
   - include: tasks/mset.yml
   - include: tasks/gputest.yml
+  - include: tasks/gpu_console.yml
