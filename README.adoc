@@ -42,7 +42,7 @@ cuDNN SDK 8.1.0.
 (Optional) TensorRT to improve latency and throughput for inference.
 ```
 
-The easy way to install the NVIDIA stack is to use link:ansible/vm/README.adoc[Ansible based provisioning].
+The easy way to install the NVIDIA stack is to use the link:ansible/vm/README.adoc[Ansible based provisioning].
 
 Once the stack is built, running the `nvidia-smi` utility will cause the kernel modules to load will verify the driver installation.
 ```
@@ -130,46 +130,7 @@ podman run --rm --security-opt=label=disable --hooks-dir=/usr/share/containers/o
 
 == Openshift
 
-link:ansible/ocp/README.adoc[Ansible based provisioning]
-
-##### Check entitlements.
-```
-oc new-project gputest
-oc run -it --rm --image=registry.access.redhat.com/ubi8:latest test-entitlement -- /bin/sh -c "dnf search kernel-header --showduplicates"
-```
-Expected output.
-```
-If you don't see a command prompt, try pressing enter.
-Red Hat Universal Base Image 8 (RPMs) - AppStream                                                                                 15 MB/s | 2.6 MB     00:00    
-Red Hat Universal Base Image 8 (RPMs) - CodeReady Builder                                                                        177 kB/s |  17 kB     00:00    
-================================================================== Name Matched: kernel-header ==================================================================
-kernel-headers-4.18.0-348.20.1.el8_5.x86_64 : Header files for the Linux kernel for use by glibc
-Session ended, resume using 'oc attach test-entitlement -c test-entitlement -i -t' command when the pod is running
-pod "test-entitlement" deleted
-```
-
-#### Operator Installation
-
-- Using the Openshift web console, install the **Red Hat Node Feature Discovery (NFD)** operator. Use the default values and it should create a namespace called `openshift-nfd`. 
-- Next create an **NodeFeatureDiscovery (NFD)** instance in that same `openshift-nfd` namespace.
-
-This should launch a daemonset.
-
-```
-oc get pods -n openshift-nfd
-```
-```
-NAME                                      READY   STATUS    RESTARTS   AGE
-nfd-controller-manager-56cc649f75-mj7bn   2/2     Running   0          5m52s
-nfd-master-4mzkt                          1/1     Running   0          100s
-nfd-master-wr4qd                          1/1     Running   0          100s
-nfd-master-zhzkq                          1/1     Running   0          100s
-nfd-worker-8tr4j                          1/1     Running   0          100s
-nfd-worker-r47qd                          1/1     Running   0          100s
-```
-
-- Using the Openshift web console, install the **nvidia operator (v1.10.1)**. It should create a namespace called `nvidia-gpu-operator`. 
-- Next create a **cluster policy (CP)** instance in the same `nvidia-gpu-operator` namespace.
+The easy way to install the NVIDIA stack is to use the link:ansible/ocp/README.adoc[Ansible based provisioning]
 
 Wait for all the pods to have a running status. This could take several minutes.
 
