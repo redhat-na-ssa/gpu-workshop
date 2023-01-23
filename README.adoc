@@ -20,14 +20,16 @@ were developed to allow non-graphics or general purpose computing applications t
 
 [.float-group]
 --
+[.left]
+.Fixed
+image::./images/skull.jpg[Fixed, 256, 256]
 
 [.left]
-.Fixed Pipeline
-image::./images/skull.jpg[non-Shaded Skull]
-[.left]
-.Programmable Pipeline
-image::./images/skullshaded.jpg[Shaded Skull]
+.Programmable
+image::./images/skullshaded.jpg[Programmable, 256, 256]
 --
+
+GPUs provide a programable graphics pipeline for realistic image rendering.
 
 == RHEL 9.1
 
