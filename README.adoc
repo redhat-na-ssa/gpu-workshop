@@ -132,35 +132,10 @@ podman run --rm --security-opt=label=disable --hooks-dir=/usr/share/containers/o
 
 The easy way to install the NVIDIA stack is to use the link:ansible/ocp/README.adoc[Ansible based provisioning]
 
-Wait for all the pods to have a running status. This could take several minutes.
+Wait for all the pods to have a completed or running status. This could take several minutes.
 
 ```
 oc get pods -n nvidia-gpu-operator
-```
-
-```
-NAME                                                  READY   STATUS      RESTARTS   AGE
-gpu-feature-discovery-2l9db                           1/1     Running     0          16h
-gpu-feature-discovery-4hg4g                           1/1     Running     0          16h
-gpu-operator-76bf46dcf8-mtkjc                         1/1     Running     0          16h
-nvidia-container-toolkit-daemonset-4dsbh              1/1     Running     0          16h
-nvidia-container-toolkit-daemonset-crz6c              1/1     Running     0          16h
-nvidia-cuda-validator-lhtjz                           0/1     Completed   0          16h
-nvidia-cuda-validator-xghsp                           0/1     Completed   0          16h
-nvidia-dcgm-7c9g2                                     1/1     Running     0          16h
-nvidia-dcgm-7q4fr                                     1/1     Running     0          16h
-nvidia-dcgm-exporter-dw4fv                            1/1     Running     0          16h
-nvidia-dcgm-exporter-xnknh                            1/1     Running     0          16h
-nvidia-device-plugin-daemonset-7c9m7                  1/1     Running     0          16h
-nvidia-device-plugin-daemonset-tbf7x                  1/1     Running     0          16h
-nvidia-device-plugin-validator-blp4n                  0/1     Completed   0          16h
-nvidia-device-plugin-validator-qsctr                  0/1     Completed   0          16h
-nvidia-driver-daemonset-410.84.202203221702-0-9pfhk   2/2     Running     0          16h
-nvidia-driver-daemonset-410.84.202203221702-0-wgcnv   2/2     Running     0          16h
-nvidia-node-status-exporter-89nsc                     1/1     Running     0          16h
-nvidia-node-status-exporter-vfsjz                     1/1     Running     0          16h
-nvidia-operator-validator-2lzvj                       1/1     Running     0          16h
-nvidia-operator-validator-5s9k9                       1/1     Running     0          16h
 ```
 
 The daemonset pods will build a driver for each node with a GPU.
@@ -180,44 +155,44 @@ oc logs -n nvidia-gpu-operator nvidia-cuda-validator-qpqcg
 cuda workload validation is successful
 ```
 
-##### Openshift Testing
+##### Openshift Application Testing
 
-Client application testing.
-
-Create a project as a cluster-admin user. GPU enabled pods require cluster privileges.
-Next, create an application and expose it's service.
+Create a project as a cluster-admin user then create a Jupyter/Tensorflow application and expose it's service as an Openshift route.
 
 ```
+APP_NAME=tensorflow
 oc new-project gputest
-oc new-app docker.io/tensorflow/tensorflow:latest-gpu-jupyter
+oc new-app --name=${APP_NAME} docker.io/tensorflow/tensorflow:latest-gpu-jupyter
 oc expose service/tensorflow
 ```
 
 ```
-oc get routes
-
-NAME                                  HOST/PORT                                                   PATH   SERVICES     PORT       TERMINATION   WILDCARD
-route.route.openshift.io/tensorflow   tensorflow-gputest.apps.ocp-green.dota-lab.iad.redhat.com          tensorflow   8888-tcp                 None
+ROUTE=http://$(oc get route ${APP_NAME} --template={{.spec.host}})
 ```
 
 Dump the logs of the tensorflow pod to obtain the jupyter lab **token**.
+
 ```
-[I 20:11:42.236 NotebookApp] Jupyter Notebook 6.4.11 is running at:
-[I 20:11:42.236 NotebookApp] http://tensorflow-544f7d6b5b-m8sjg:8888/?token=7f5cfa6a9780fd77594c1e6a45ae88002169e98d87a38580
+POD=$(oc get pods --selector=deployment=tensorflow --output=custom-columns=:.metadata.name --no-headers)
+
+oc logs ${POD} | grep token
+```
+```
+http://tensorflow-544f7d6b5b-m8sjg:8888/?token=7f5cfa6a9780fd77594c1e6a45ae88002169e98d87a38580
 ```
 
 It may be necessary to set the `nvidia.com/gpu=1` limit to ensure the pod get scheduled on a node with a GPU.
 
 ```
-oc set resources deployment/tensorflow --requests=nvidia.com/gpu=1 --limits=nvidia.com/gpu=1
+oc set resources deployment/${APP_NAME} --requests=nvidia.com/gpu=1 --limits=nvidia.com/gpu=1
 ```
 
 Connect to the tensorflow pod and run a quick GPU test.
 
 ```
-oc rsh tensorflow-6594894964-8gtz5 
+oc rsh ${POD} bash
 
-$ python
+tf-docker /tf > python
 Python 3.8.10 (default, Mar 15 2022, 12:22:08) 
 [GCC 9.4.0] on linux
 >>> import tensorflow as tf
@@ -227,11 +202,19 @@ Python 3.8.10 (default, Mar 15 2022, 12:22:08)
 $
 ```
 
-Login to Jupyter and run the `classification.ipynb` notebook.
+##### Jupyter/Tensorflow Example
 
-##### Create a new tensorflow/jupyter app from the [nvidia examples site](https://nvidia.github.io/gpu-operator/).
+- Visit the ${ROUTE} from above.
+- Use the token to login to Jupyter.
+- Open the `tensorflow-tutorials/classification.ipynb` notebook.
+- Run all of the cells.
+- It should train, test and validate a machine learning model.
 
-##### OpenDataHub
+== GPU Dashboard (Openshift v4.11+)
+
+Install the GPU console plugin dashboard by following the link:https://docs.openshift.com/container-platform/4.11/monitoring/nvidia-gpu-admin-dashboard.html[Openshift documentation]
+
+== OpenDataHub (optional)
 
 Create a new project for OpenDataHub.
 
@@ -244,11 +227,7 @@ Create the CUDA enabled notebook image streams.
 oc apply -f https://raw.githubusercontent.com/red-hat-data-services/odh-manifests/master/jupyterhub/notebook-images/overlays/additional/tensorflow-notebook-imagestream.yaml 
 ```
 
-#### GPU Dashboard (Openshift v4.11+)
-
-Install the GPU console plugin dashboard by following the [Openshift documentation](https://docs.openshift.com/container-platform/4.11/monitoring/nvidia-gpu-admin-dashboard.html).
-
-#### Custom Notebook Limits
+##### Custom Notebook Limits (Optional)
 
 Configmaps are used to set custom notebook resource limits such as number of cpu cores,
 memory and GPUs. This is necessary for the jupyter pod to get scheduled
@@ -259,11 +238,11 @@ Apply the following configmap before the launching jupyterhub server.
 oc apply -f src/jupyterhub-notebook-sizes.yml
 ```
 
-== Demos
+== Additional Demos
 
 From within Jupyter, clone the following repo:
 
-[Tensor Flow Examples](https://github.com/tensorflow/docs.git)
+link:https://github.com/tensorflow/docs.git[Tensor Flow Examples]
 
 These tensorflow notebook examples should run:
 
