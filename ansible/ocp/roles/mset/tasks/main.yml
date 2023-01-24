@@ -46,12 +46,22 @@
     - r_csv.resources[0].status.availableReplicas is defined
     - r_csv.resources[0].status.availableReplicas == 1
 
-# oc get node ip-10-0-146-246.us-east-2.compute.internal -o json | jq -r '.metadata.annotations."nfd.node.kubernetes.io/feature-labels"' | tr "," "\n"
-- kubernetes.core.k8s_info:
+# At this point, the GPU enabled machineset is ready however still need to wait until corresponding OCP node has the appropriate "allocatable" status
+- name: Check `allocatable` status on node corresponding to GPU enabled machineset
+  kubernetes.core.k8s_info:
     kind: Node
     label_selectors:
       - node-role.kubernetes.io/gpu
   register: n_response
+  retries: 30
+  delay: 15
+  until:
+    - n_response.resources | length > 0
+    - n_response.resources[0] | length > 0
+    - n_response.resources[0].status.allocatable['nvidia.com/gpu'] is defined
+    - n_response.resources[0].status.allocatable['nvidia.com/gpu'] == "1"
+
+# oc get node ip-10-0-146-246.us-east-2.compute.internal -o json | jq -r '.metadata.annotations."nfd.node.kubernetes.io/feature-labels"' | tr "," "\n"
 - debug:
     msg:
       - "GPU annotations for node:  {{ n_response.resources[0].metadata.name  }} = "
