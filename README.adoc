@@ -246,7 +246,11 @@ oc apply -f https://raw.githubusercontent.com/red-hat-data-services/odh-manifest
 
 #### GPU Dashboard (Openshift v4.11+)
 
-Install the GPU console plugin dashboard by following the [Openshift documentation](https://docs.openshift.com/container-platform/4.11/monitoring/nvidia-gpu-admin-dashboard.html).
+The ansible used to provision your GPU enabled openshift environment will install a link:https://docs.openshift.com/container-platform/4.11/monitoring/nvidia-gpu-admin-dashboard.html[GPU dashboard] plugin to the OpenShift Admin Console.
+
+As a `cluster-admin` user, authenticate into the OpenShift Admin Console and navigate to:  `Compute -> GPU`
+
+image::images/gpu-dashboard.png[]
 
 #### Custom Notebook Limits
 
@@ -282,4 +286,6 @@ oc create -f grafana-data-source.yaml
 ```
 
 Import the sample [DCGM exporter dashboard](https://grafana.com/grafana/dashboards/12239-nvidia-dcgm-exporter-dashboard/) (`grafana/NVIDIA_DCGM_Exporter_Dashboard.json`)
+
+image::images/prometheus.png[]
 
