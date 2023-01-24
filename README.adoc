@@ -114,13 +114,22 @@ Compare the CPU vs. GPU elapsed time in the output.
 Matrix Multiply Elapsed Time: {'CPU': 6.495161056518555, 'GPU': 0.9890825748443604}
 ```
 
-##### Nvidia Container Toolkit
+== Additional RHEL Demos
 
-Install the [Nvidia Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#podman)
+=== CUDA Demo
+```
+cd /usr/local/cuda-11.8/extras/demo_suite
+./nbody -benchmark -cpu
+./nbody -benchmark
+```
 
-Configure the toolkit for rootless operation.
+=== Container Demos
 
-##### Containerized app test
+==== Install the link:https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#podman[NVIDIA container toolkit].
+
+==== Configure the toolkit for rootless operation.
+
+=== Containerized app test
 
 The `nvidia-smi` output should be similar to what was reported above.
 
@@ -237,8 +246,6 @@ Apply the following configmap before the launching jupyterhub server.
 ```
 oc apply -f src/jupyterhub-notebook-sizes.yml
 ```
-
-== Additional Demos
 
 From within Jupyter, clone the following repo:
 
