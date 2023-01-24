@@ -76,10 +76,12 @@ items:
             resources:
               limits:
                 nvidia.com/gpu: '1'
+                cpu: 4
                 memory: '3Gi'
               requests:
                 nvidia.com/gpu: '1'
-                memory: '250Mi'
+                cpu: 1
+                memory: '1Gi'
             securityContext:
               privileged: false
             terminationMessagePath: /dev/termination-log
