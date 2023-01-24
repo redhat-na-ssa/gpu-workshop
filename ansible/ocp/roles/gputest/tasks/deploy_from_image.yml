@@ -18,12 +18,13 @@
     definition: "{{ lookup('template', 'templates/' + application_template ) | from_yaml }}"
     namespace: "{{ namespace }}"
 
+# In AWS, download of quay.io/modh/cuda-notebooks can take close to 4 minutes.  Subsequently, will bump up retries in this task.
 - name: "{{ namespace }}: wait until DC {{ application_name }} is ready"
   shell: "{{ openshift_cli }} get dc {{ application_name }} -o template --template={{ json_template }} -n {{ namespace }}"
   vars:
     json_template: '\{\{.status.readyReplicas\}\}'
   register: result
   until: result.stdout == "1"
-  retries: 10
+  retries: 20
   delay: 30
   changed_when: false
