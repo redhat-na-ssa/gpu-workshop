@@ -44,7 +44,7 @@ cuDNN SDK 8.1.0.
 
 The easy way to install the NVIDIA stack is to use the link:ansible/vm/README.adoc[Ansible based provisioning].
 
-Once the stack is built, running the `nvidia-smi` utility will cause the kernel modules to load will verify the driver installation.
+Once the stack is built, running the `nvidia-smi` utility will cause the kernel modules to load and will verify the driver installation.
 ```
 nvidia-smi
 ```
@@ -140,6 +140,7 @@ podman run --rm --security-opt=label=disable --hooks-dir=/usr/share/containers/o
 
 == Openshift
 
+=== Install
 The easy way to install the NVIDIA stack is to use the link:ansible/ocp/README.adoc[Ansible based provisioning]
 
 Wait for all the pods to have a completed or running status. This could take several minutes.
@@ -165,52 +166,99 @@ oc logs -n nvidia-gpu-operator nvidia-cuda-validator-qpqcg
 cuda workload validation is successful
 ```
 
-##### Openshift Application Testing
+=== GPU Test
 
-Create a project as a cluster-admin user then create a Jupyter/Tensorflow application and expose it's service as an Openshift route.
+. Determine the id of the `gputest` pod:
++
+-----
+$ POD=$(oc get pods --selector=deploymentconfig=gputest -n gputest --output=custom-columns=:.metadata.name --no-headers)
+-----
 
-```
-APP_NAME=tensorflow
-oc new-project gputest
-oc new-app --name=${APP_NAME} docker.io/tensorflow/tensorflow:latest-gpu-jupyter
-oc expose service/tensorflow
-```
+. Connect to the tensorflow pod:
++
+-----
+$ oc rsh ${POD} bash
+-----
 
-```
-ROUTE=http://$(oc get route ${APP_NAME} --template={{.spec.host}})
-```
+. Install the `tensorflow` module:
++
+-----
+$ pip install tensorflow
+-----
 
-Dump the logs of the tensorflow pod to obtain the jupyter lab **token**.
+. Install `matplotlib`:
++
+-----
+$ pip install matplotlib
+-----
 
-```
-POD=$(oc get pods --selector=deployment=tensorflow --output=custom-columns=:.metadata.name --no-headers)
 
-oc logs ${POD} | grep token
-```
-```
-http://tensorflow-544f7d6b5b-m8sjg:8888/?token=7f5cfa6a9780fd77594c1e6a45ae88002169e98d87a38580
-```
+. Run a quick GPU test:
 
-It may be necessary to set the `nvidia.com/gpu=1` limit to ensure the pod get scheduled on a node with a GPU.
+.. Switch to the `python` interpreter:
++
+-----
+$ python
 
-```
-oc set resources deployment/${APP_NAME} --requests=nvidia.com/gpu=1 --limits=nvidia.com/gpu=1
-```
 
-Connect to the tensorflow pod and run a quick GPU test.
-
-```
-oc rsh ${POD} bash
-
-tf-docker /tf > python
 Python 3.8.10 (default, Mar 15 2022, 12:22:08) 
 [GCC 9.4.0] on linux
+-----
+
+. At the python command line, import tensorflow and list physical devices:
++
+-----
 >>> import tensorflow as tf
 >>> tf.config.list_physical_devices()
 [PhysicalDevice(name='/physical_device:CPU:0', device_type='CPU'), PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
+-----
+
+. Exit out of the python shell:
++
+-----
 >>> exit()
 $
-```
+-----
+
+
+=== Jupyter Lab Web App
+
+. Determine route to `GPU Test` web app:
++
+-----
+$ echo -en "\nhttp://$(oc get route gputest --template={{.spec.host}} -n gputest)\n"
+-----
+
+. In a new tab of your browser, navigate to the URL returned in the above command.
+
+
+. Determine the `token` needed to authenticate into the jupyter web app:
++
+From the log file of the pod, pick out the token:
++
+-----
+$ oc logs ${POD} -n gputest | grep "token=" | head -n 1 | cut -d "=" -f2
+-----
+
+. Use the token to authenticate into the Jupyter Lab web app.
+
+. In Jupyter lab, clone the link:https://github.com/tensorflow/docs.git[tensorflow docs] examples and run the notebook at:  `docs/site/en/tutorials/keras/classification.ipynb`
+
+.. Error:
++
+-----
+2023-01-24 19:44:26.632828: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-01-24 19:44:26.776592: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2023-01-24 19:44:27.622397: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer.so.7'; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+2023-01-24 19:44:27.622486: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer_plugin.so.7'; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+2023-01-24 19:44:27.622497: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+-----
+
+.. There doesn't seem to be a `tensorRT` image in quay.io/modh/cuda-notebooks.
++
+TensorRT packages found link:https://developer.nvidia.com/nvidia-tensorrt-7x-download[here].
+
 
 ##### Jupyter/Tensorflow Example
 
@@ -220,11 +268,11 @@ $
 - Run all of the cells.
 - It should train, test and validate a machine learning model.
 
-== GPU Dashboard (Openshift v4.11+)
+=== GPU Dashboard (OCP v4.11+)
 
 Install the GPU console plugin dashboard by following the link:https://docs.openshift.com/container-platform/4.11/monitoring/nvidia-gpu-admin-dashboard.html[Openshift documentation]
 
-== OpenDataHub (optional)
+=== OpenDataHub (optional)
 
 Create a new project for OpenDataHub.
 
