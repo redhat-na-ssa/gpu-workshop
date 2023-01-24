@@ -47,7 +47,8 @@
     - r_csv.resources[0].status.availableReplicas == 1
 
 # At this point, the GPU enabled machineset is ready however still need to wait until corresponding OCP node has the appropriate "allocatable" status
-- name: Check `allocatable` status on node corresponding to GPU enabled machineset
+# At the same time, a slew of daemonset resources will be created in {{ gpu_operator_namespace }}
+- name: "Check `allocatable` status on node corresponding to GPU machineset. $ oc get daemonset -n {{ gpu_operator_namespace }}"
   kubernetes.core.k8s_info:
     kind: Node
     label_selectors:
