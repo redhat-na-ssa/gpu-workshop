@@ -127,7 +127,8 @@ cd /usr/local/cuda-11.8/extras/demo_suite
 
 ==== For RHEL8.x, install the link:https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#podman[NVIDIA container toolkit].
 
-==== For RHEL9.x, link:https://blog.shawonashraf.com/nvidia-podman-fedora-37[follow this blog post].
+==== For RHEL9.x, link:https://blog.shawonashraf.com/nvidia-podman-fedora-37[follow this blog post] to 
+install the NVIDIA container toolkit.
 
 === Containerized app test
 
