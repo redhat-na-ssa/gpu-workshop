@@ -72,6 +72,7 @@
     dnf:
       name:
         - cuda-11-8
+        - libnccl
         - libcudnn8
         - libcusparse-11-8
         - libcublas-11-8
