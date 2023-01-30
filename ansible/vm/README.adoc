@@ -18,47 +18,33 @@ nvidia drivers that match a specific Red Hat kernel release.
 == Pre-reqs
 
 . *ansible*
++
+Ansible needs to be installed.  On Fedora/RHEL based systems, ansible can be installed either via DNF or via Python pip.  Choose one of the following
 
-.. Ansible needs to be installed on the local host machine. ie:
+.. *DNF* install:
+
+... Ansible needs to be installed on the local host machine. ie:
 +
 -----
 # dnf install ansible
 -----
 
-.. In addition, the link:https://docs.ansible.com/ansible/latest/collections/ansible/posix/firewalld_module.html[ansible-posix collection] is also needed. ie:
+... In addition, the link:https://docs.ansible.com/ansible/latest/collections/ansible/posix/firewalld_module.html[ansible-posix collection] is also needed. ie:
 +
 -----
 # dnf install ansible-collection-ansible-posix.noarch
 -----
 
-. *RHEL9 virtual machine*
+.. *Python pip* install:
 
-.. Operating system user
-+
-Operating system user needs to be enabled with ability to sudo.
-+
-In addition, ssh access via public/private keys needs to be enabled for this user.
-
-.. Subscription-Manager
-+
-All VMs need to already have access to base RHEL 9 dnf/yum repositories.
-
-.. Storage
-+
-The NVIDIA drivers that are installed (as part of this ansible) require at least 20GB allocated to the `/` filesystem.
-
-. *RHEL9 localhost example*
-
-.. Login to the RHEL9 and assume that you have `sudo` privileges with a password.
-
-.. Create the `inventory` file and set the user name.
+... Create the `inventory` file and set the user name.
 +
 ```
 [local]
 localhost ansible_connection=ssh  ansible_user=<change-me>
 ```
 
-.. Create a python virtual environment.
+... Create a python virtual environment.
 +
 ```
 $ python -m venv ~/venv
@@ -66,7 +52,26 @@ $ source ~/venv/bin/activate
 $ pip install pip ansible -Uq
 ```
 
-.. Run the ansible playbook as noted below.
+. *RHEL9 virtual machine*
++
+The target RHEL9 GPU enabled virtual machine needs to be configured with the following:
+
+.. *Operating system user*
++
+Operating system user needs to be enabled with ability to sudo.
++
+In addition, ssh access via public/private keys needs to be enabled for this user.
+
+.. *Subscription-Manager*
++
+All VMs need to already have access to base RHEL 9 dnf/yum repositories.
+
+.. *Storage*
++
+The NVIDIA drivers that are installed (as part of this ansible) require at least 20GB allocated to the `/` filesystem.
+
+.. *GPU*
+
 
 == Procedure
 
@@ -92,4 +97,189 @@ Pay particular attention to `changeme` configs.
 $ ansible-playbook -i inventory vm_update.yml
 -----
 
+== Post-Install Verify
 
+. View version of kernel module that NVIDIA driver is reporting:
++
+-----
+$ cat /proc/driver/nvidia/version
+-----
++
+You should see a response similar to the following:
++
+-----
+NVRM version: NVIDIA UNIX x86_64 Kernel Module  515.86.01  Wed Oct 26 09:12:38 UTC 2022
+GCC version:  gcc version 11.3.1 20220421 (Red Hat 11.3.1-2) (GCC)
+-----
+
+. View list of NVIDIA related kernel modules:
++
+-----
+$ lsmod | grep -i nvidia
+-----
++
+You should see a response similar to the following:
++
+-----
+nvidia_drm             73728  0
+nvidia_modeset       1150976  1 nvidia_drm
+nvidia_uvm           1351680  0
+nvidia              40882176  2 nvidia_uvm,nvidia_modeset
+drm_kms_helper        200704  4 hyperv_drm,nvidia_drm
+drm                   622592  6 drm_kms_helper,drm_shmem_helper,nvidia,hyperv_drm,nvidia_drm
+-----
+
+== Appendix
+
+=== Optional: GPU enabled Azure VM
+This section documentes how a member of the Red Hat Sales organization can obtain & configure a GPU enabled virtual machine from Azure.
+
+==== Blank Subscription
+
+. Order a `Blank` Azure Subscription via `demo.redhat.com`
+
+.. Authenticate into `demo.redhat.com`.
+.. Navigate to: `Catalog` and search for: `Azure`
+.. Select: `Azure Subscription Based Blank Open Environment`
++
+With this environment, you will be provided access to a Microsoft account.
+This account will be temporarily granted `Contributor` access to a subscription from a pool.
+As a `Contributor`, you'll have the ability to request for quota allocation for a GPU enabled environment.
++
+NOTE:  There is a similar option called:  `Azure Blank Open Environment`.
+DO not to select this!  It will not allow you to request a GPU enabled virtual machine.
+
+.. Click: `Order` and fill-out the order form.
+
+. Wait until you receive an email invite from Microsoft.
++
+Accept the invite to join Azure services.
+
+. Navigate to `portal.azure.com` and authenticate using your Red Hat kerberos credentials.
+
+. Verify domain
+
+.. Click your profile avatar in the top right corner and navigate to: `Switch directory -> Directories -> All Directories.
+
+.. You should see that you are associated with `redhat.com` _Directory_ that includes the _domain_: `redhat0.onmicrosoft.com`.
++
+image::../../images/azure_directory.png[]
+
+.. If not, switch to this directory.
+
+==== GPU Series
+
+For the purpose of this workshop, a link:https://learn.microsoft.com/en-us/azure/virtual-machines/nct4-v3-series[NCASv3-series] GPU enabled VM will be utilized.
+
+==== Quota Increase
+
+. At _azure.portal.com_, navigate to `All services -> Quotas`
+
+. Request an increase of 8 units for the _Standard NCASv3_T4 Family_ of CPU/GPU sizes in your desired region:
++
+image::../../images/azure_quota_increase.png[]
+
+. Within about 5 minutes or so, you should notice that quota has increased to 8 units
+
+==== Create a VM:
+
+.. Click:  `Create a Resource -> Virtual Machine -> Create`
+
+.. Complete the form as follows:
+
+... *Resource group*: select from the drop down the resource group created by RHPDS
+... *Virtual machine name*:  provide a unique name
+... *Select a Region*:
++
+You'll need to identify a region that provides the required CPU/GPU size called:  `Standard_NC4as_T4_v3 - 4 vcpus,28 GiB memory`
+
+... *Image*: Red Hat Enterprise Linux 9.1 (LVM) - x64 Gen 2
+
+... *Size*: Standard_NCAS_v3_T4 - 4 vcpus,28 GiB memory 
++
+NOTE: You'll likely need to request quota increase to 8 units similar to the following:
++
+image::../../images/azure_quota_select.png[]
+
+... *Username*: azureuser
+
+... *SSH public key source*: Either generate a new key pair or upload an existing public key
+
+==== Confirm GPU
+
+. SSH into the VM as `azureuser`
+. Execute:
++
+-----
+$ sudo lshw -C display
+-----
++
+Results should be similar to the following:
++
+-----
+  *-display                 
+       description: 3D controller
+       product: TU104GL [Tesla T4]
+       vendor: NVIDIA Corporation
+       physical id: 1
+
+  ...
+-----
+
+. Verify you have a `CUDA` capable GPU.  Execute:
++
+-----
+$ lspci | grep -i nvidia
+-----
+
+==== Resize VM
+
+The `/` root partition is initially set at: 2.0 GBs.  This will not be sufficient to support any data-science related use-cases.
+
+This partition can be expanded as follows:
+
+. SSH into the VM as `azureuser`
+. Execute: `lsblk`
++
+Notice that the sda4 device is under-utilized.  There is opportunity to expand the `/` filesystem with-out the need to acquire an additional disk.
+
+. View details of `root` logical volume:
++
+-----
+$ sudo lvdisplay /dev/rootvg/rootlv
+-----
+
+. Extend the size of the `home` logical volume:
++
+-----
+$ sudo lvextend -L +10G /dev/rootvg/homelv \
+    && sudo xfs_growfs /dev/mapper/rootvg-homelv
+-----
+
+. Extend the size of the `usr` logical volume:
++
+-----
+$ sudo lvextend -L +10G /dev/rootvg/usrlv \
+    && sudo xfs_growfs /dev/mapper/rootvg-usrlv
+-----
+
+. Extend the size of the `var` logical volume:
++
+-----
+$ sudo lvextend -L +5G /dev/rootvg/varlv \
+    && sudo xfs_growfs /dev/mapper/rootvg-varlv
+-----
+
+. Extend the size of `root` logical volume to its maximum:
++
+-----
+$ sudo lvextend -l +100%FREE /dev/rootvg/rootlv \
+    && sudo xfs_growfs /dev/mapper/rootvg-rootlv
+-----
+
+. Re-execute `lsblk` and notice the new size of the `/` partition
+
+
+=== Questions:
+
+. Why not just execute a *.run script as generated by link:https://www.nvidia.com/Download/index.aspx?lang=en[NVidia Driver Downloads] and as documented link:https://docs.nvidia.com/datacenter/tesla/pdf/NVIDIA_Driver_Installation_Quickstart.pdf[here]?
