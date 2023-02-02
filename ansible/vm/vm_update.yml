@@ -4,6 +4,13 @@
   become: true
   tasks:
 
+  - name: Print OS major version
+    debug: 
+      msg: "OS major version = {{ ansible_distribution_major_version }}"
+
+  - set_fact: cuda_version=11-3
+    when: cuda_version is undefined 
+
   - name: Update all installed packages using YUM module
     yum:
       name: '*'
@@ -16,16 +23,18 @@
     yum:
       autoremove: yes
 
-  - name: Reboot when packages were updated
+  - name: Reboot after packages have been updated
     reboot:
     when: yum_update_status.changed
 
-  - name: Add repositories
+  - name: Register for EPEL package repository
     ansible.builtin.yum_repository:
       name: epel
       description: EPEL YUM repo
       gpgkey: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-$releasever
-      metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-$releasever&arch=$basearch&infra=$infra&content=$contentdir
+      metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-source-8&arch=$basearch&infra=$infra&content=$contentdir
+
+  # TO-DO:  Consider executing the equivalent:   sudo dnf groupinstall --with-optional "Development Tools"
   - name: Add RHEL/EPEL packages
     dnf:
       name:
@@ -43,17 +52,18 @@
         - python3-firewall
         - podman-docker
         - skopeo
-        - python-pip
+        - python3-pip
         - git
-        - java-11-openjdk-devel
+        - java-17-openjdk-devel
         - maven
       state: present
     
-  - ansible.builtin.yum_repository:
-      name: cuda-rhel9-x86_64
+  - name: Register for NVIDIA package repository
+    ansible.builtin.yum_repository:
+      name: cuda-rhel{{ ansible_distribution_major_version }}-x86_64
       description: NVIDIA repo
       gpgcheck: false
-      baseurl: https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64
+      baseurl: https://developer.download.nvidia.com/compute/cuda/repos/rhel{{ ansible_distribution_major_version }}/x86_64
 
   - name: Add NVIDIA driver packages
     dnf:
@@ -61,7 +71,7 @@
         - '@nvidia-driver:latest-dkms'
       state: installed
 
-  - name: Check nvidia-smi
+  - name: View nvidia-smi (System Management Interface) regarding GPU related hardware details
     shell: >
       nvidia-smi
     register: nvidia_smi
@@ -71,13 +81,13 @@
   - name: Add CUDA packages
     dnf:
       name:
-        - cuda-11-8
+        - cuda-{{ cuda_version }}
         - libnccl
         - libcudnn8
-        - libcusparse-11-8
-        - libcublas-11-8
-        - libcufft-11-8
-        - cuda-cudart-11-8
+        - libcusparse-{{ cuda_version }}
+        - libcublas-{{ cuda_version }}
+        - libcufft-{{ cuda_version }}
+        - cuda-cudart-{{ cuda_version }}
         - mesa-libGLU
         - freeglut
       state: present

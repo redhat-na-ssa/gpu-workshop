@@ -3,7 +3,6 @@
 :toc2:
 :linkattrs:
 
-
 = GPU Workshop Ansible:  VM
 
 :numbered:
@@ -71,7 +70,11 @@ All VMs need to already have access to base RHEL 9 dnf/yum repositories.
 The NVIDIA drivers that are installed (as part of this ansible) require at least 20GB allocated to the `/` filesystem.
 
 .. *GPU*
++
+Refer to one of the following:
 
+.. <<GPU enabled Azure VM>>
+.. <<GPU enabled AWS VM>>
 
 == Procedure
 
@@ -92,9 +95,23 @@ Make changes to `inventory` file as needed.
 Pay particular attention to `changeme` configs.
 
 . Execute:
+
+.. Utilize defaults:
 +
 -----
 $ ansible-playbook -i inventory vm_update.yml
+-----
+
+.. Optional: Specify different versions of Cuda:
+
+... Cuda library versions for RHEL 8 can be found link:https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/[here].
+... Cuda library versions for RHEL 9 can be found link:https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/[here]
+
+... Execute:
++
+-----
+$ ansible-playbook -i inventory vm_update.yml \
+    -e cuda_version=11-8
 -----
 
 == Post-Install Verify
@@ -131,7 +148,34 @@ drm                   622592  6 drm_kms_helper,drm_shmem_helper,nvidia,hyperv_dr
 
 == Appendix
 
-=== Optional: GPU enabled Azure VM
+=== docker-compose
+
+. Enable the podman socket for your operating system user (ie:  _azureuser_ )
++
+-----
+$ systemctl --user enable podman.socket \
+    && systemctl --user start podman.socket \
+    && systemctl --user status podman.socket
+-----
+
+. Add a shell environment variable that specifies where to connect to docker/podman:
++
+-----
+$ echo -en "\nexport DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock" >> $HOME/.bashrc \
+    && source $HOME/.bashrc
+-----
+
+. Install docker-compose
++
+-----
+$ pip3 install docker-compose
+-----
+
+=== GPU enabled AWS VM
+
+. AWS Blank Open Environment
+
+=== GPU enabled Azure VM
 This section documentes how a member of the Red Hat Sales organization can obtain & configure a GPU enabled virtual machine from Azure.
 
 ==== Blank Subscription
@@ -147,13 +191,11 @@ This account will be temporarily granted `Contributor` access to a subscription 
 As a `Contributor`, you'll have the ability to request for quota allocation for a GPU enabled environment.
 +
 NOTE:  There is a similar option called:  `Azure Blank Open Environment`.
-DO not to select this!  It will not allow you to request a GPU enabled virtual machine.
+Do not to select this!  It will not allow you to request a GPU enabled virtual machine.
 
 .. Click: `Order` and fill-out the order form.
 
-. Wait until you receive an email invite from Microsoft.
-+
-Accept the invite to join Azure services.
+. Once provisioning is completed, demo.redhat.com will publish details of the new subscription based blank open environment.
 
 . Navigate to `portal.azure.com` and authenticate using your Red Hat kerberos credentials.
 
@@ -171,15 +213,35 @@ image::../../images/azure_directory.png[]
 
 For the purpose of this workshop, a link:https://learn.microsoft.com/en-us/azure/virtual-machines/nct4-v3-series[NCASv3-series] GPU enabled VM will be utilized.
 
+This offering provides a GPU with the following specs:
+
+-----
+        "+---------------------------------------------------------------------------------------+",
+        "| NVIDIA-SMI 530.30.02              Driver Version: 530.30.02    CUDA Version: 12.1     |",
+        "|-----------------------------------------+----------------------+----------------------+",
+        "| GPU  Name                  Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |",
+        "| Fan  Temp  Perf            Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |",
+        "|                                         |                      |               MIG M. |",
+        "|=========================================+======================+======================|",
+        "|   0  Tesla T4                        Off| 00000001:00:00.0 Off |                  Off |",
+        "| N/A   53C    P0               29W /  70W|      2MiB / 16384MiB |      7%      Default |",
+        "|                                         |                      |                  N/A |",
+        "+-----------------------------------------+----------------------+----------------------+",
+
+-----
+
 ==== Quota Increase
 
-. At _azure.portal.com_, navigate to `All services -> Quotas`
+. In the left panel of _portal.azure.com_, navigate to `All services -> Quotas -> Compute`
 
 . Request an increase of 8 units for the _Standard NCASv3_T4 Family_ of CPU/GPU sizes in your desired region:
 +
 image::../../images/azure_quota_increase.png[]
 
-. Within about 5 minutes or so, you should notice that quota has increased to 8 units
+. After some time, microsoft should approve your request for quota increase to 8 units:
+
+.. You should receive an email from Microsoft acknowledging your initial request for quota increase.
+.. The _My quotas_ page includes a `refresh` link that you can use to periodically check status.
 
 ==== Create a VM:
 
@@ -187,23 +249,32 @@ image::../../images/azure_quota_increase.png[]
 
 .. Complete the form as follows:
 
-... *Resource group*: select from the drop down the resource group created by RHPDS
+... *Resource group*: select from the resource group (created by RHPDS) from the drop-down
 ... *Virtual machine name*:  provide a unique name
 ... *Select a Region*:
 +
-You'll need to identify a region that provides the required CPU/GPU size called:  `Standard_NC4as_T4_v3 - 4 vcpus,28 GiB memory`
+Specify the region that you previously selected to request increased quota for:  `Standard_NC4as_T4_v3 - 4 vcpus,28 GiB memory`
 
-... *Image*: Red Hat Enterprise Linux 9.1 (LVM) - x64 Gen 2
+... *Image*:
++
+Choose one of the following:
+
+.... _Red Hat Enterprise Linux 9.1 (LVM) - x64 Gen 2_
+.... _Red Hat Enterprise Linux 8.6 (LVM) - x64 Gen 2_
++
+NOTE: The implication of the major version of OS is the CUDA library versions made available by NVIDIA:
+The Cuda library versions for RHEL 8 can be found link:https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/[here].
+The Cuda library versions for RHEL 9 can be found link:https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/[here].
+
+
 
 ... *Size*: Standard_NCAS_v3_T4 - 4 vcpus,28 GiB memory 
-+
-NOTE: You'll likely need to request quota increase to 8 units similar to the following:
-+
-image::../../images/azure_quota_select.png[]
 
 ... *Username*: azureuser
 
 ... *SSH public key source*: Either generate a new key pair or upload an existing public key
+
+. Click `Review + Create`
 
 ==== Confirm GPU
 
@@ -280,6 +351,24 @@ $ sudo lvextend -l +100%FREE /dev/rootvg/rootlv \
 . Re-execute `lsblk` and notice the new size of the `/` partition
 
 
-=== Questions:
+==== Customize Azure Firewall Rules
 
-. Why not just execute a *.run script as generated by link:https://www.nvidia.com/Download/index.aspx?lang=en[NVidia Driver Downloads] and as documented link:https://docs.nvidia.com/datacenter/tesla/pdf/NVIDIA_Driver_Installation_Quickstart.pdf[here]?
+. In the portal page for your new VM, navigate to `Settings -> Networking`.
+
+. Click `Add inbound port rule` and populate the form as follows:
++
+image::../../images/azure_custom_firewall.png[]
+
+=== TO-DO
+
+==== TensorRT install
+
+. link:https://developer.nvidia.com/nvidia-tensorrt-8x-download[nvidia-tensorrt-8x-download]
+
+. link:https://docs.nvidia.com/deeplearning/tensorrt/install-guide/index.html#installing-rpm[tensorrt rpm]
+
+-----
+$ sudo rpm -ivh /u02/downloads/nv-tensorrt-local-repo-rhel8-8.5.1-cuda-11.8-1.0-1.x86_64.rpm
+
+$ sudo dnf install tensorrt-devel tensorrt-libs libnvonnxparsers-devel-8.5.1-1.cuda11.8
+-----
