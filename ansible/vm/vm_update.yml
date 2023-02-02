@@ -86,6 +86,8 @@
   - name: Open firewall ports
     ansible.posix.firewalld:
       port: 8000-9999/tcp
-      permanent: yes
+      permanent: true
       state: enabled
-
+      zone: public
+  - shell: |
+      firewall-cmd --reload
