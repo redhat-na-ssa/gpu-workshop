@@ -30,11 +30,10 @@ Why is parallel processing useful for AIML?
   - 4 NVIDIA Tesla M60s (8GB)
   - RHEL 9.2/NVIDIA/Pytorch
 
-- Data: Fashion MNIST Image Classifier
-  - Framework
-  - [Pytorch Distributed](https://pytorch.org/tutorials/beginner/dist_overview.html)
+- Training Dataset: Fashion MNIST Image Classifier
+- [Deep Neural Network implemented using the Pytorch Distributed Framework](https://pytorch.org/tutorials/beginner/dist_overview.html)
 
-Running a simple example on (2) nodes with multiple GPUs on each node.
+Procedure for running a simple example on (2) nodes with multiple GPUs on each node.
 
 Python setup for all nodes
 ```
