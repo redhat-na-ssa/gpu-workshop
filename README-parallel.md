@@ -1,14 +1,14 @@
-# Approaches to Accelerate Model Training on GPUs with Parallel Processing 
+# Approaches to Accelerate ML Model Training on GPUs with Parallel Processing 
 
 (Currently a work in progress)
 
 ## Overview
 
-Why is parallel processing important?
+Why is parallel processing useful for AIML?
 
-- Training execution run times on a single GPU are prohibitive
-- Data sizes exceed the memory of a single GPU
-- Model (neural network) sizes exceed the memory of a single GPU
+- When training execution run times on a single GPU are prohibitive.
+- When data sizes exceed the memory of a single GPU.
+- When model (neural network) sizes exceed the memory of a single GPU.
 
 ### Approaches
 
@@ -23,12 +23,16 @@ Why is parallel processing important?
   - The data is copied to all GPUs
   - The model network is partitioned across all GPUs
   
-### Deployment Example
+### RHEL Deployment Example
 
-- AWS Instances
+- 2 AWS Instances each containing:
   - 16 vCPUs, 512GB RAM
   - 4 NVIDIA Tesla M60s (8GB)
   - RHEL 9.2/NVIDIA/Pytorch
+
+- Data: Fashion MNIST Image Classifier
+  - Framework
+  - [Pytorch Distributed](https://pytorch.org/tutorials/beginner/dist_overview.html)
 
 Running a simple example on (2) nodes with multiple GPUs on each node.
 
@@ -36,14 +40,6 @@ Python setup for all nodes
 ```
 pip install pip torch numpy torchvision torch_optimizer -U
 ```
-
-Example
-
-Data: Fashion MNIST Image Classifier
-
-Framework
-- [Pytorch Distributed](https://pytorch.org/tutorials/beginner/dist_overview.html)
-
 Running the example:
 
 Run this on each node by changing the only the `node-id=n` argument.
@@ -69,7 +65,7 @@ Observations
 
 The gap in the curves represents the cost associated with updating the weights during gradient descent between the nodes.
 
-- Openshift/Kubernetes Microservices
+### Openshift/Kubernetes Microservices
   - Deploy as jobs via Helm charts
   - Benefits:
     - GPUs can be shared and only locked when the job runs.
