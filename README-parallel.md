@@ -62,7 +62,8 @@ Graphs
 
 Observations
 
-The gap between the curves represents the communication overhead or the cost associated with updating the weights during gradient descent between the main and worker nodes.
+- Scaling begins to diminish approaching 4 GPUs. This *could* be architecture dependent (intra GPU to CPU bandwidth, etc) or a function of training hyper-parameters (requires additional testing). 
+- The gap between the curves represents the communication overhead or the cost associated with updating the weights during gradient descent between the main and worker nodes.
 
 ### Openshift/Kubernetes Microservices (future work)
   - How
