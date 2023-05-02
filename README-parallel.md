@@ -64,7 +64,7 @@ Observations
 
 The gap in the curves represents the cost associated with updating the weights during gradient descent between the main and worker nodes.
 
-### Openshift/Kubernetes Microservices
+### Openshift/Kubernetes Microservices (future work)
   - How
     - Deploy python scripts as Kubernetes jobs via Helm charts
   - Value:
