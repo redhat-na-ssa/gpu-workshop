@@ -41,10 +41,11 @@ pip install pip torch numpy torchvision torch_optimizer -U
 ```
 Running the example:
 
-Run this on each node by changing the only the `--node-id=n` argument.
+Run this on each node by changing the only the `--node-id=n` argument. Pass in `--node-id=n`
+for the main and increment for each worker node.
 
 ```
-$ python 04-pt-data-parallel.py --num-nodes=1 --node-id=0 --num-gpus=4 --target-accuracy=0.75 --batch-size=16
+$ python 04-pt-data-parallel.py --num-nodes=2 --node-id=0 --num-gpus=4 --target-accuracy=0.75 --batch-size=16
 ```
 #### Results
 
@@ -72,5 +73,6 @@ Observations
     - A central platform for large scale ML model training.
     - Maximize GPU efficiency
       - GPUs are locked only during job execution.
+  - Add Grafana to monitor metrics.
 
 This work is based on NVIDIA's excellent [Data Parallelism Workshop](https://www.nvidia.com/en-us/training/instructor-led-workshops/train-deep-learning-models-on-multi-gpus/)
