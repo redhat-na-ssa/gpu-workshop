@@ -44,6 +44,10 @@ args = parser.parse_args()
 # os.environ['MASTER_ADDR'] = 'localhost' 
 # os.environ['MASTER_PORT'] = '9956' 
 WORLD_SIZE = args.num_gpus * args.num_nodes
+
+#
+# CHANGE localhost to the hostname of the main node.
+#
 os.environ['MASTER_ADDR'] = 'localhost' 
 os.environ['MASTER_PORT'] = '9956' 
 

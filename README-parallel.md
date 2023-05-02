@@ -23,7 +23,7 @@ Why is parallel processing useful for AI/ML?
   - The data is copied to all GPUs
   - The model network is partitioned across all GPUs
   
-### RHEL Deployment Example
+### Data Parallel Deployment Example
 
 - 2 AWS Instances each containing:
   - 16 vCPUs, 512GB RAM
@@ -41,13 +41,16 @@ pip install pip torch numpy torchvision torch_optimizer -U
 ```
 Running the example:
 
-Run this on each node by changing the only the `--node-id=n` argument. Pass in `--node-id=n`
+Edit `04-pt-data-parallel.py`, goto line 51 and change os.environ['MASTER_ADDR'] = 'localhost'
+to the hostname of your main node.
+
+Run the following example on each node by changing the only the `--node-id=n` argument. Pass in `--node-id=n`
 for the main and increment for each worker node.
 
 ```
 $ python 04-pt-data-parallel.py --num-nodes=2 --node-id=0 --num-gpus=4 --target-accuracy=0.75 --batch-size=16
 ```
-#### Results
+#### Data Parallel Results
 
 Speedup
 | GPUs | 1 node | 2 nodes|
