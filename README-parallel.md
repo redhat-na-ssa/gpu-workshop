@@ -62,7 +62,7 @@ Graphs
 
 Observations
 
-The gap in the curves represents the cost associated with updating the weights during gradient descent between the nodes.
+The gap in the curves represents the cost associated with updating the weights during gradient descent between the main and worker nodes.
 
 ### Openshift/Kubernetes Microservices
   - How
