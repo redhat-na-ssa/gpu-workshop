@@ -1,10 +1,10 @@
-# Approaches to Accelerate ML Model Training on GPUs with Parallel Processing 
+# Accelerate ML Model Training on GPUs with Parallel Processing 
 
-(Currently a work in progress)
+(A work in progress)
 
 ## Overview
 
-Why is parallel processing useful for AIML?
+Why is parallel processing useful for AI/ML?
 
 - When training execution run times on a single GPU are prohibitive.
 - When data sizes exceed the memory of a single GPU.
@@ -65,8 +65,11 @@ Observations
 The gap in the curves represents the cost associated with updating the weights during gradient descent between the nodes.
 
 ### Openshift/Kubernetes Microservices
-  - Deploy as jobs via Helm charts
-  - Benefits:
-    - GPUs can be shared and only locked when the job runs.
+  - How
+    - Deploy python scripts as Kubernetes jobs via Helm charts
+  - Value:
+    - A central platform for large scale ML model training.
+    - Maximize GPU efficiency
+      - GPUs are locked only during job execution.
 
 This work is based on NVIDIA's excellent [Data Parallelism Workshop](https://www.nvidia.com/en-us/training/instructor-led-workshops/train-deep-learning-models-on-multi-gpus/)
