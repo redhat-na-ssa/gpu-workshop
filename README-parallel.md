@@ -77,5 +77,7 @@ Observations
     - Maximize GPU efficiency
       - GPUs are locked only during job execution.
   - Add Grafana to monitor metrics.
+  - Use machine set auto-scalers
+  - Investigate check pointing.
 
 This work is based on NVIDIA's excellent [Data Parallelism Workshop](https://www.nvidia.com/en-us/training/instructor-led-workshops/train-deep-learning-models-on-multi-gpus/)
