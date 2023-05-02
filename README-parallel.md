@@ -41,7 +41,7 @@ pip install pip torch numpy torchvision torch_optimizer -U
 ```
 Running the example:
 
-Run this on each node by changing the only the `node-id=n` argument.
+Run this on each node by changing the only the `--node-id=n` argument.
 
 ```
 $ python 04-pt-data-parallel.py --num-nodes=1 --node-id=0 --num-gpus=4 --target-accuracy=0.75 --batch-size=16
