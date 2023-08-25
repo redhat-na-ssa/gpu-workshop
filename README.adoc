@@ -220,6 +220,8 @@ Python 3.8.10 (default, Mar 15 2022, 12:22:08)
 $
 -----
 
+=== GPU Pod test
+`oc apply -f https://raw.githubusercontent.com/NVIDIA/gpu-operator/master/tests/gpu-pod.yaml`
 
 === Jupyter Lab Web App
 
