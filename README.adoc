@@ -131,7 +131,7 @@ sudo yum install nvidia-container-toolkit-base -y
 
 ==== For RHEL8.x, install the link:https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#podman[NVIDIA container toolkit].
 
-==== For RHEL9.x, link:https://blog.shawonashraf.com/nvidia-podman-fedora-37[follow this blog post] to 
+==== For RHEL9.1, https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-podman[follow these instructions] to 
 install the NVIDIA container toolkit.
 
 === Containerized app tests (verified for RHEL9.2)
