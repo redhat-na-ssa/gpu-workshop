@@ -125,17 +125,23 @@ cd /usr/local/cuda-11.8/extras/demo_suite
 
 === Container Demos
 
+```
+sudo yum install nvidia-container-toolkit-base -y
+```
+
 ==== For RHEL8.x, install the link:https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#podman[NVIDIA container toolkit].
 
 ==== For RHEL9.x, link:https://blog.shawonashraf.com/nvidia-podman-fedora-37[follow this blog post] to 
 install the NVIDIA container toolkit.
 
-=== Containerized app test
+=== Containerized app tests (verified for RHEL9.2)
 
 The `nvidia-smi` output should be similar to what was reported above.
 
 ```
-podman run --rm --security-opt=label=disable --hooks-dir=/usr/share/containers/oci/hooks.d/ nvcr.io/nvidia/cuda:11.3.0-devel-ubi8 nvidia-smi
+podman run --rm --device nvidia.com/gpu=all --security-opt=label=disable nvcr.io/nvidia/cuda:11.3.0-devel-ubi8 nvidia-smi
+
+podman run --rm --device nvidia.com/gpu=all --security-opt=label=disable nvcr.io/nvidia/k8s/cuda-sample:vectoradd-cuda11.7.1-ubi8
 ```
 
 == Openshift
